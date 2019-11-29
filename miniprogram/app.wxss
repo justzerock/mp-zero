@@ -1,0 +1,37 @@
+/**app.wxss**/
+@import "font/icon.wxss";
+@import "font/he.wxss";
+@import "font/song.wxss";
+@import "font/fcolor.wxss";
+@import "font/animate.wxss";
+
+button::after {
+  border: none;
+}
+
+page {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

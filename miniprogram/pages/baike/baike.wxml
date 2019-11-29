@@ -1,0 +1,55 @@
+<view class='container'>
+  <view class='content'>
+    <scroll-view class='home-page' scroll-y='true'>
+      <view class='v-head {{headup?"focus":""}}'>
+        <view class='{{result!=""?"icon-left":"icon-baike"}} baike-icon global {{loading?"loading":""}}' style='color:{{primaryColor}};background:{{backgroundColor}};' bindtap='backHome'></view>
+        <view class='v-keyword'>
+          <input bindinput='inputkeyword' class='input-keyword {{focus?"focus":""}}' style='color:{{primaryColor}};background:{{backgroundColor}};' type='text' confirm-type='search' bindconfirm='onSearch' placeholder='{{searchTip}}' placeholder-style='color:{{primaryColor}};' value='{{keyword}}' bindfocus='focus' bindblur='blur'></input>
+          <view class='icon-clear clear-icon {{clearIcon?"show":""}}' style='color:{{primaryColor}};' bindtap='clearkeyword'></view>
+          <button bindtap='onSearch' class='btn-search' hover-class='btn-search-hover' style='color:{{backgroundColor}};background:{{primaryColor}};'>
+            {{btnSearch}}
+          </button>
+        </view>
+      </view>
+      <view wx:if='{{showHis && baikeHistory != "" && !headup}}' class='history'>
+        <view class='title-show' style='color:{{primaryColor}};'>
+          <view class='icon-history his-icon'>查询历史</view>
+        </view>
+        <view class='history-card'>
+          <block wx:for="{{baikeHistory}}" wx:for-index="idx" wx:key="idx">
+            <view wx:if='{{idx%2==0}}' class="history-item" hover-class='history-item-hover' style='color:{{backgroundColor}};background:{{primaryColor}};'>
+              <view class="his-name" data-name='{{item}}' bindtap='searchThis'>{{item}}</view>
+              <view class="icon-clear his-clear" data-index='{{idx}}' bindtap='deleteThis'></view>
+            </view>
+            <view wx:else class="history-item" hover-class='history-item-hover' style='color:{{primaryColor}};background:{{backgroundColor}};'>
+              <view class="his-name" data-name='{{item}}' bindtap='searchThis'>{{item}}</view>
+              <view class="icon-clear his-clear" data-index='{{idx}}' bindtap='deleteThis'></view>
+            </view>
+          </block>
+        </view>
+        <view class='icon-del delete-icon' hover-class='delete-icon-hover' style='color:{{primaryColor}};background:{{backgroundColor}};' bindtap='deleteAll'></view>
+      </view>
+      <view wx:if="{{tip!=''&&!showHis}}" class='erro-tip' style='color:{{primaryColor}};background:{{backgroundColor}};'>
+        <view class='{{tipIcon}} tip-icon'></view>
+        {{tip}}
+      </view>
+      <view wx:if="{{resultImg!=''&&!showHis}}" class='img-view'>
+        <image src='{{resultImg[0]}}' bindtap='previewImg' mode='widthFix' style='width:{{imgWidth}}rpx; '></image>
+      </view>
+      <view wx:if="{{result!=''&&!showHis}}" class='info-tags'>
+        <block wx:for="{{result.card}}" wx:for-item="tag" wx:key="unique">
+          <view class='info-item enter' hover-class='info-item-hover'>
+            <rich-text class='item-name' style='color:{{backgroundColor}};background:{{primaryColor}};' data-name='{{tag.name}}' type='text' nodes="{{tag.name}}" bindtap='searchThis'></rich-text>
+            <rich-text class='item-value' style='color:{{primaryColor}};background:{{backgroundColor}};' data-name='{{tag.value[0]}}' type='text' nodes="{{tag.value[0]}}" bindtap='searchThis'></rich-text>
+          </view>
+        </block>
+      </view>
+      <block wx:if="{{result!=''&&!showHis}}">
+        <rich-text class='baike-result' style='color:{{primaryColor}};background:{{backgroundColor}};' type='text' nodes="{{result.abstract}}">
+          内容来自百度百科
+        </rich-text>
+      </block>
+    </scroll-view>
+    <tabbar color="{{set?primaryColor:backgroundColor}}" current="{{ current }}"></tabbar>
+  </view>
+</view>

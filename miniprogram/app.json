@@ -1,0 +1,51 @@
+{
+  "cloud": true,
+  "pages": [
+    "pages/weather/weather",
+    "pages/dict/dict",
+    "pages/baike/baike",
+    "pages/city/city",
+    "pages/colors/colors",
+    "pages/center/center",
+    "pages/about/about"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#549688",
+    "navigationBarTitleText": "ZERO",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#BEBEBE",
+    "selectedColor": "#549688",
+    "backgroundColor": "#F6FAF9",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/weather/weather",
+        "text": "天气",
+        "iconPath": "img/weather.png",
+        "selectedIconPath": "img/weathero.png"
+      },
+      {
+        "pagePath": "pages/dict/dict",
+        "text": "词典",
+        "iconPath": "img/dict.png",
+        "selectedIconPath": "img/dicto.png"
+      },
+      {
+        "pagePath": "pages/baike/baike",
+        "text": "百科",
+        "iconPath": "img/baike.png",
+        "selectedIconPath": "img/baikeo.png"
+      },
+      {
+        "pagePath": "pages/center/center",
+        "text": "我的",
+        "iconPath": "img/user.png",
+        "selectedIconPath": "img/usero.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

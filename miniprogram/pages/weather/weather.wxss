@@ -1,0 +1,653 @@
+
+/* css变量 */
+/* page {
+  --page-bg:#7497BB;
+}
+
+.content {
+  background: var(--page-bg);  
+} */
+
+/* 显示城市 */
+.locat-view {
+  height: 80rpx;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.locat-text {
+  display: inline-flex;
+  font-weight: bold;
+}
+
+.locat-text>view {
+  margin-left: 20rpx;
+}
+
+/* 天气滑动页 start */
+
+.weather-swiper {
+  display: flex;
+  width: 100%;
+  margin-top: 60rpx;
+  margin-bottom: 40rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.weather-swiper-item {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  animation: showup 0.5s linear;
+}
+
+.swiper-card {
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  margin: 50rpx 10% auto;
+  border-radius: 10rpx;
+  border: 5rpx solid #fff;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  /* background: #f5f7f9; */
+  box-sizing: border-box;
+}
+
+.list.swiper-card {
+  height: 100%;
+  background: none;
+  border: none;
+  box-shadow: none;
+  justify-content: space-between;
+}
+
+.day-list {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.list-card {
+  display: flex;
+  flex-direction: column;
+  flex-flow: 1;
+  height: 25%;
+  margin: 20rpx 5%;
+  border-radius: 20rpx;
+  border: 5rpx solid #fff;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  will-change: transition;
+  transition: all .2s;
+  font-family: 'song';
+}
+
+.list-card-hover {
+  transform: translateX(1em);
+}
+
+.list-line {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  /* background: #f5f7f9; */
+  border-radius: 0 0 20rpx 20rpx;
+  font-size: 35rpx;
+  font-weight: bold;
+}
+
+.list-line.top {
+  /* background: #7497bb; */
+  border-radius: 20rpx 20rpx 0 0;
+}
+
+.list-line.top .list-cond-text {
+  flex-grow: 1;
+  /* color: #fff; */
+}
+
+.list-cond-text {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  /* color: #7497bb; */
+  text-align: center;
+  margin: 20rpx auto;
+  padding-left: 10rpx;
+  padding-right: 10rpx;
+}
+
+.list-cond-img {
+  display: inline-flex;
+  width: 40%;
+  justify-content: center;
+  align-items: center;
+  font-size: 100rpx;
+  /* color: #7497bb; */
+}
+
+/* Now·更新时间提示 start */
+
+.v-now-upd {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.now-text {
+  display: inline-flex;
+  flex-grow: 1;
+  color: #ccdae9;
+  text-align: left;
+  font-weight: bold;
+  font-size: 60rpx;
+  margin: 20rpx;
+  z-index: 10;
+  /* text-shadow: 5rpx 5rpx 0 #f5f7f9, 8rpx 8rpx 0 #ccdae9; */
+}
+
+.now-text.loading {
+  animation: nowtext 400ms linear infinite;
+}
+
+@keyframes nowtext {
+  50% {
+    opacity: .5;
+  }
+}
+
+.refresh {
+  padding: 10rpx;
+  opacity: .5;
+  font-weight: bolder;
+  transition: all .5s;
+}
+
+.refresh.loading {
+  animation: refresh linear .5s infinite;
+}
+
+@keyframes refresh {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.upd-text {
+  font-size: 30rpx;
+  display: inline-flex;
+  flex-grow: 1;
+  /* color: #7497bb; */
+  will-change: transition;
+  transition: all 1s linear;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20rpx;
+  font-family: 'song';
+}
+
+/* 更新时间提示 end */
+
+/* 天气图标 start */
+
+.cond-img-v {
+  display: flex;
+  position: relative;
+  height: 250rpx;
+  justify-content: center;
+  align-content: center;
+  margin: 60rpx auto 20rpx;
+  will-change: transform;
+  animation: o-y 2s ease-out;
+}
+
+@keyframes o-y {
+  0% {
+    transform: translateY(-90rpx);
+  }
+
+  50% {
+    transform: translateY(10rpx);
+  }
+
+  75% {
+    transform: translateY(-5rpx);
+  }
+
+  100% {
+    transform: translateY(0rpx);
+  }
+}
+
+.cond-img {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-content: center;
+  font-size: 240rpx;
+  will-change: transform;  
+  /* color: #3c5f81; */
+}
+
+.cond-img.sun {
+  animation: sun 30s linear infinite;
+  text-shadow: unset !important;
+}
+
+.sun.s1 {
+  transform: translate(4rpx, 4rpx);
+}
+.sun.s0 {
+  transform: translate(8rpx, 8rpx);
+}
+
+@keyframes sun {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.cond-img.others {
+  animation: others 15s linear infinite;
+}
+
+@keyframes others {
+  0% {
+    transform: translate(0,0);
+  }
+
+  12% {
+    transform: translate(-4rpx,-2rpx);    
+  }
+
+  25% {
+    transform: translate(-8rpx,0);    
+  }
+
+  37% {
+    transform: translate(-4rpx,2rpx);    
+  }
+
+  50% {
+    transform: translate(0,0);
+  }
+
+  62% {
+    transform: translate(4rpx,-2rpx);    
+  }
+
+  75% {
+    transform: translate(8rpx,0);    
+  }
+
+  87% {
+    transform: translate(4rpx,2rpx);    
+  }
+
+  100% {
+    transform: translate(0,0);
+  }
+}
+
+.cloud-float {
+  display: flex;
+  position: absolute;
+  top: 60rpx;
+  height: 260rpx;
+  width: 100%;
+  opacity: 0;
+}
+
+.cloud-float.sun {
+  animation: float-sun 5s linear;
+}
+@keyframes float-sun {
+  0% {
+    opacity: 25;
+  }
+  25% {
+    opacity: 100;    
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.cloud-float.others {
+  opacity: 25;
+}
+.cloud1,.cloud2 {
+  display: inline-flex;
+  font-size: 150rpx;
+  position: absolute;
+}
+
+.cloud1 {
+  top: 100rpx;
+  animation: float1 10s linear infinite;
+}
+.cloud2 {
+  top: 50rpx;
+  right: 0;
+  animation: float2 10s linear infinite;
+}
+
+@keyframes float1 {
+  0% {
+    transform: translate(0,0);
+    opacity: 25;
+  }
+  25% {
+    transform: translate(20rpx,5rpx);
+  }
+  50% {
+    transform: translate(50rpx,0);
+    opacity: 100;
+  }
+  75% {
+    transform: translate(20rpx,-5rpx);
+  }
+  100% {
+    transform: translate(0,0);
+    opacity: 25;    
+  }
+}
+@keyframes float2 {
+  0% {
+    transform: translate(0,0);
+    opacity: 25;
+  }
+  25% {
+    transform: translate(-20rpx,-5rpx);
+  }
+  50% {
+    transform: translate(-50rpx,0);
+    opacity: 100;
+    
+  }
+  75% {
+    transform: translate(-20rpx,5rpx);
+  }
+  100% {
+    transform: translate(0,0);
+    opacity: 25;    
+  }
+}
+/* 天气图标 end */
+
+/* 实时温度 */
+
+.now-tmp {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  /* color: #3c5f81; */
+  font-weight: bold;
+  font-size: 70rpx;
+  font-family: 'song';
+}
+
+/* 实时天气状况 */
+
+.cond-text {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* color: #3c5f81; */
+  font-weight: bold;
+  font-size: 95rpx;
+  font-family: 'song';
+}
+
+/* 天气滚动条 */
+
+.life-swiper {
+  display: flex;
+  flex-grow: 1;
+  width: 50%;
+  justify-content: center;
+  height: 100rpx;
+  font-family: 'song';
+}
+
+.life-swiper-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100rpx;
+  /* color: #7497bb; */
+  font-size: 35rpx;
+}
+
+/* 天气来源 */
+
+.weather-from {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  font-size: 35rpx;
+  color: #bbb;
+  font-family: 'song';
+}
+
+.swiper-card.life {
+  background: none;
+  box-shadow: none;
+  border: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* animation: headup 250ms ease; */
+}
+
+@keyframes headup {
+  0% {
+    transform: translateY(40rpx);
+    transform: scaleY(0.5);
+  }
+
+  50% {
+    transform: translateY(-30rpx);
+    transform: scaleY(1.1);
+  }
+
+  100% {
+    transform: translateY(0);
+    transform: scaleY(1);
+  }
+}
+
+.life-item {
+  width: 45%;
+  height: 23%;
+  flex-grow: 1;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  will-change: transition;
+  transition: box-shadow 100ms linear;
+  border: 5rpx solid #fff;
+  box-sizing: border-box;
+  border-radius: 20rpx 0 20rpx 0;
+  margin: 0 1% 20rpx;
+  font-size: 35rpx;
+  font-weight: bold;
+  font-family: 'song';
+  background: #f5f7f9;
+}
+
+.life-item-hover {
+  box-shadow: 3px 3px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+}
+
+.life-type {
+  display: flex;
+  height: 65%;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  background: #7497bb;
+  border-radius: 20rpx 0 20rpx 0;
+  color: #fff;
+  padding: 0 0.5em;
+}
+
+.hour-cond-txt {
+  max-width: 4em;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+}
+.hour-cond-icon {
+  font-size: 1.5em;
+}
+
+.life-brf {
+  display: flex;
+  height: 35%;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  color: #3c5f81;
+  padding: 0 0.5em;  
+}
+.hour-tmp {
+  width: 1.5em;
+}
+.today-btn {
+  display: flex;
+  height: 100rpx;
+  align-items: center;
+  justify-content: center;
+  margin: 20rpx 10%;
+  padding: unset;
+  border: 5rpx solid #fff;
+  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  font-weight: bold;
+  font-size: 35rpx;
+}
+
+/* .today-btn.bgcolor1 {
+  background: #f5f7f9;
+  color: #3c5f81;
+}
+
+.today-btn.bgcolor2 {
+  background: #7497bb;
+  color: #fff;
+} */
+
+/* .today-btn-hover1 {
+  background: #efefef !important;
+  color: #3c5f81 !important;
+}
+
+.today-btn-hover2 {
+  background: #91bae2 !important;
+  color: #fff !important;
+} */
+
+.today-btn>view {
+  display: inline-flex;
+  justify-content: center;
+  align-content: center;
+  margin-left: 20rpx;
+  transition: 0.2s linear;
+}
+
+.updown {
+  transform: rotate(180deg);
+}
+
+/* .nowani {
+  animation: nowani 250ms ease;
+} */
+
+@keyframes nowani {
+  0% {
+    transform: translateY(-20rpx);
+  }
+
+  50% {
+    transform: translateY(10rpx);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.loadingsun {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 300rpx;
+  animation: loadingsun 2s infinite;
+}
+
+@keyframes loadingsun {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.dots {
+  position:absolute;
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  height:40rpx;
+  justify-content:center;
+  bottom:97rpx;
+}
+
+.dots .dot {
+  margin: auto 8rpx;
+  width: 14rpx;
+  height: 14rpx;
+  opacity: 0.5;
+  border-radius: 8rpx;
+  transition: all 0.6s;
+  will-change: transition;
+}
+
+.dots .dot.active {
+  width: 24rpx;
+  opacity: 1;
+}
+
+/* 淡入动画 */
+
+@keyframes showup {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100;
+  }
+}

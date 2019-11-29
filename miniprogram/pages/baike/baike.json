@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "百科",
+  "usingComponents": {
+    "tabbar": "../../components/tab-bar/index"
+  }
+}

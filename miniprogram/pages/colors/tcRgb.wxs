@@ -1,0 +1,13 @@
+var tcrgb = function (color, percent) {
+  var f = color
+  var t = percent < 0 ? 0 : 255
+  var p = percent < 0 ? percent * -1 : percent
+  var R = parseInt(f[0])
+  var G = parseInt(f[1])
+  var B = parseInt(f[2])
+  return '#' + (Math.round((t - R) * p) + R).toString(16) + (Math.round((t - G) * p) + G).toString(16) + (Math.round((t - B) * p) + B).toString(16)
+}
+
+module.exports = {
+  tcrgb: tcrgb
+}

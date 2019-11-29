@@ -1,0 +1,157 @@
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100rpx;
+  align-items: center;
+  /* background: #7497BB; */
+}
+
+.search-icon {
+  display: inline-flex;
+  position: absolute;
+  /* color: #7497BB; */
+  font-size: 40rpx;
+  left: 45rpx;
+  z-index: 2;
+}
+
+.search-icon.loading {
+  animation: color 5s linear infinite;
+}
+
+@keyframes color {
+  0% {
+    color: #7497BB;
+  }
+  16.6%{
+    color: #EA4335;
+  }
+  33.3% {
+    color: #FBBC05;
+  }
+  50% {
+    color: #4285F4;
+  }
+  66.6% {
+    color: #34A853;
+  }
+  83.3%{
+    color: #EA4335;
+  }
+  100% {
+    color: #7497BB;
+  }
+}
+
+.clear-icon{
+  display: inline-flex;
+  position: absolute;
+  /* color: #ADB5BD; */
+  font-size: 40rpx;
+  right: 50rpx;
+  z-index: 2;
+  opacity:0;
+  transition: opacity 350ms linear;
+}
+.clear-icon.show {
+  opacity: 100;
+}
+
+.search-bar>input {
+  display: inline-flex;
+  width: 100%;
+  height: 70rpx;  
+  /* color: #7497BB;
+  background: #f5f7f9; */
+  border-radius: 30rpx;
+  margin:auto 3%;
+  padding: 0 85rpx;
+  font-size: 35rpx;
+  justify-content: center;
+  align-content: center;
+  border: 5rpx solid #fff;
+  box-sizing: border-box;
+}
+
+.search-bar>input.focus {
+  border: 5rpx solid #4DABF7;
+}
+
+.city-toplist-1{
+  display: block;
+}
+
+.city-toplist-2{
+  display: none;
+}
+
+.locattop {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.locat-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.locat-card.his {
+  flex-direction: row-reverse;
+  flex-wrap: wrap-reverse; 
+}
+
+.locat-item{
+  display: flex;
+  flex-grow: 1;
+  width: 30%;
+  height: 60rpx;
+  font-size: 30rpx;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30rpx;
+  margin: 10rpx 1% 0;  
+  border: 5rpx solid #fff;  
+  box-shadow: 5rpx 5rpx 5rpx #cdcdcd;  
+  box-sizing: border-box;  
+}
+
+.locat-item.even {
+  color: #7497BB;
+  background: #f5f7f9;
+}
+.locat-item.odd {
+  color: #fff;
+  background: #7497BB;
+}
+
+.locat-txt,.clear-his {
+  display: inline-flex;
+  font-size: 40rpx;
+  margin: 30rpx 20rpx 10rpx;
+}
+
+.clear-his {
+  float: right;
+}
+
+.citylist-item {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  /* background: #f5f7f9; */
+  padding: 20rpx;  
+  box-sizing: border-box;
+  border: 5rpx solid #fff;
+  box-shadow: 5rpx 5rpx 5rpx #dedede;   
+  /* color: #3C5F81;  */
+}
+
+.citylist-item>view {
+  display: inline-block;
+}
+
+.citylist-item .key1 {
+  color: #4DABF7;
+}

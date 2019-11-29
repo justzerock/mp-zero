@@ -1,0 +1,207 @@
+<wxs module='mod'>
+  var getMydate = function(time) {
+    var date = time ? getDate(time.replace(getRegExp('-', 'g'), '/')) : getDate()
+    date = date.getMonth() + 1 + '月' + date.getDate() + '日'
+    return date
+  }
+  var getMytime = function(time) {
+    var time = time ? getDate(time.replace(getRegExp('-', 'g'), '/')) : getDate()
+    var hours = time.getHours()
+    var minutes = time.getMinutes()
+    time = (hours < 10 ? '0'+hours : hours ) + ':' + (minutes < 10 ? '0'+minutes : minutes )
+    return time
+  }
+  var getMyhour = function(time) {
+    var time = time ? getDate(time.replace(getRegExp('-', 'g'), '/')) : getDate()
+    time = time.getDate() + '日' + time.getHours() + '时'
+    return time
+  }
+  var getName = function(type) {
+    var name = '';
+    switch (type) {
+      case 'comf':
+        name = '舒适度指数';
+        break;
+      case 'drsg':
+        name = '穿衣指数';
+        break;
+      case 'flu':
+        name = '感冒指数';
+        break;
+      case 'sport':
+        name = '运动指数';
+        break;
+      case 'trav':
+        name = '旅游指数';
+        break;
+      case 'uv':
+        name = '紫外线指数';
+        break;
+      case 'cw':
+        name = '洗车指数';
+        break;
+      default:
+        name = '空气污染扩散\n条件指数';
+    }
+    return name;
+  }
+  module.exports.getMydate = getMydate
+  module.exports.getMytime = getMytime
+  module.exports.getMyhour = getMyhour
+  module.exports.getName = getName
+
+</wxs>
+<view class='container'>
+  <view class='content' style='background:{{primaryColor}};'>
+    <block wx:if="{{weather==''}}">
+      <view class="loadingsun he-100" style="color:{{primaryColor}}"></view>
+    </block>
+    <view wx:if="{{weather!=''}}" class='locat-view' style='color:{{backgroundColor}};'>
+      <view bindtap='searchcity' class='icon-location locat-text' wx:if="{{weather.basic.location==weather.basic.parent_city}}">
+        <view>{{weather.basic.location}}</view>
+      </view>
+      <view bindtap='searchcity' class='icon-location locat-text' wx:else>
+        <view>{{weather.basic.parent_city}} {{weather.basic.location}}</view>
+      </view>
+    </view>
+    <swiper wx:if='{{weather!=""}}' class='weather-swiper' style='height:{{platform=="ios"?deviceHeight:"100%"}};' duration="100" current='{{swiperCurrent}}' bindchange="swiperChange">
+      <swiper-item class='weather-swiper-item'>
+        <view 
+          style='display:{{now}};background:{{backgroundColor}};' 
+          class='swiper-card nowani animated flipInX' 
+          bindtap='showrefresh'
+          >
+          <view class='v-now-upd' style='color:{{primaryColor}};'>
+            <!-- <view class='icon-update refresh {{refreshing?"loading":""}}' bindtap='upd'></view> -->
+            <view class='upd-text' style='opacity:{{showrefresh?"0":"1"}};'>
+              更新于 {{mod.getMytime(weather.update.loc)}}
+            </view>
+          </view>
+          <view class='cond-img-v'>
+            <view class='cond-img {{weather.now.cond_code==100?"sun":"others"}} he-{{weather.now.cond_code||100}}' style='color:{{primaryColor}};'></view>
+          </view>
+          <view class='cloud-float {{(weather.now.cond_code==100||weather.now.cond_code>104)?"sun":"others"}}' style='color:{{primaryColor}};'>
+            <view class='cloud1 he-102 '></view>
+            <view class='cloud2 he-102 '></view>
+          </view>
+          <text class='cond-text' style='color:{{primaryColor}};'>{{weather.now.cond_txt}}</text>
+          <text class='now-tmp' style='color:{{primaryColor}};'>{{weather.now.tmp}}°</text>
+          <swiper class='life-swiper' style='color:{{primaryColor}}' vertical='true' autoplay='true' circular='true' interval='3500' duration='300'>
+            <block>
+              <swiper-item class='life-swiper-item'>
+                <view>体感温度 {{weather.now.fl}}°C</view>
+              </swiper-item>
+              <swiper-item class='life-swiper-item'>
+                <view>{{weather.now.wind_dir}} {{weather.now.wind_sc}}级</view>
+              </swiper-item>
+              <swiper-item class='life-swiper-item'>
+                <view>相对湿度 {{weather.now.hum}}%</view>
+              </swiper-item>
+            </block>
+          </swiper>
+          <view class='weather-from' style='color:{{primaryColor}};'>来源：和风天气</view>
+        </view>
+        <view style='display:{{life}}' class='swiper-card life animated flipInX'>
+          <block wx:if='{{!showLife}}' wx:for="{{weather.hourly}}" wx:for-item="hour" wx:key="unique">
+            <view class='life-item animated {{animated?"flipInX":""}}' bindtap='showlife' style='background:{{backgroundColor}};'>
+              <view class='life-type' style='color:{{backgroundColor}}; background:{{primaryColor}};'>
+                <view class='hour-cond-txt'>
+                  {{hour.cond_txt}}
+                </view>
+                <view class='he-{{hour.cond_code}} hour-cond-icon'></view>
+              </view>
+              <view class='life-brf' style='color:{{primaryColor}};'>
+                <view class='hour-time'>
+                  {{mod.getMyhour(hour.time)}}
+                </view>
+                <view class='hour-tmp'>
+                  {{hour.tmp}}°
+                </view>
+              </view>
+            </view>
+          </block>
+          <block wx:if='{{showLife}}' wx:for="{{weather.lifestyle}}" wx:for-item="life" wx:key="unique">
+            <view data-life-txt='{{life.txt}}' bindtap='showlife' class='life-item animated {{animated?"flipInX":""}}' style='background:{{backgroundColor}};'>
+              <view class='life-type' style='color:{{backgroundColor}}; background:{{primaryColor}};'>
+                {{mod.getName(life.type)}}
+              </view>
+              <view class='life-brf' style='color:{{primaryColor}};'>{{life.brf}}</view>
+            </view>
+          </block>
+        </view>
+        <button bindtap='switchCard' class='today-btn' style='{{styleBtn}}'>
+          {{mod.getMydate(weather.update.loc)}}-{{btntext}}
+          <view class='icon-up {{now=="flex"?"updown":""}}'></view>
+        </button>
+      </swiper-item>
+      <block wx:if="{{weather!=''}}">
+        <swiper-item class='weather-swiper-item'>
+          <swiper vertical='true' circular='true' autoplay='{{autoplay}}' interval='5000' duration='1000' style='position:relative; height:100%; width:100%;'>
+            <swiper-item 
+              class='day-list'
+              style='height:100%; width:100%;'
+              >
+              <block wx:if='{{idx<3}}' wx:for="{{weather.daily_forecast}}" wx:for-item="forecast" wx:for-index="idx" wx:key="idx">
+                <view 
+                  bindtap='showDayTmp'
+                  data-index='{{idx}}'
+                  class='list-card' 
+                  hover-class='animated shake'
+                  >
+                  <view class='list-line top' style='color:{{backgroundColor}};background:{{primaryColor}};'>
+                    <view class='list-cond-text'>{{mod.getMydate(forecast.date)}}</view>
+                    <view class='list-cond-text'>{{forecast.tmp_min}}～{{forecast.tmp_max}} °C</view>
+                  </view>
+                  <view class='list-line' style='color:{{primaryColor}};background:{{backgroundColor}};'>
+                    <view wx:if="{{forecast.cond_txt_d==forecast.cond_txt_n}}" class='list-cond-text'>
+                      {{forecast.cond_txt_d}}
+                    </view>
+                    <view wx:else class='list-cond-text'>
+                      {{forecast.cond_txt_d}} 转 {{forecast.cond_txt_n}}
+                    </view>
+                    <view class='list-cond-img he-{{forecast.cond_code_d}}'></view>
+                  </view>
+                </view>
+              </block>
+            </swiper-item>
+            <swiper-item 
+              class='day-list'
+              style='height:100%; width:100%;'
+              >
+              <block wx:if='{{idx>=3&&idx<6}}' wx:for="{{weather.daily_forecast}}" wx:for-item="forecast" wx:for-index="idx" wx:key="idx">
+                <view 
+                  bindtap='showDayTmp'
+                  data-index='{{idx}}'
+                  class='list-card' 
+                  hover-class='animated shake'
+                  >
+                  <view class='list-line top' style='color:{{backgroundColor}};background:{{primaryColor}};'>
+                    <view class='list-cond-text'>{{mod.getMydate(forecast.date)}}</view>
+                    <view class='list-cond-text'>{{forecast.tmp_min}}～{{forecast.tmp_max}} °C</view>
+                  </view>
+                  <view class='list-line' style='color:{{primaryColor}};background:{{backgroundColor}};'>
+                    <view wx:if="{{forecast.cond_txt_d==forecast.cond_txt_n}}" class='list-cond-text'>
+                      {{forecast.cond_txt_d}}
+                    </view>
+                    <view wx:else class='list-cond-text'>
+                      {{forecast.cond_txt_d}} 转 {{forecast.cond_txt_n}}
+                    </view>
+                    <view class='list-cond-img he-{{forecast.cond_code_d}}'></view>
+                  </view>
+                </view>
+              </block>
+            </swiper-item>
+          </swiper>
+          <!-- <scroll-view class='list swiper-card' scroll-y="true" scroll-with-animation="true">
+          </scroll-view> -->
+        </swiper-item>
+      </block>
+    </swiper>
+    <view wx:if='{{weather!=""}}' class='dots'>
+      <block wx:for='{{2}}' wx:key='unique'>
+        <view class='dot {{index == swiperCurrent ? "active" : ""}}' style="background:{{backgroundColor}};"></view>
+      </block>
+    </view>
+    <tabbar color="{{set?primaryColor:backgroundColor}}" current="{{ current }}"></tabbar>
+  </view>
+</view>

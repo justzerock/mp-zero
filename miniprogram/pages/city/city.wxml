@@ -1,0 +1,70 @@
+<wxs module="mod">
+  var idxOf = function(key, item) {
+    return item.indexOf(key);
+  }
+  module.exports.indexOf = idxOf;
+</wxs>
+<view class='container'>
+  <view class='content'>
+    <view class='search-bar' style='background:{{set?primaryColor:backgroundColor}};'>
+      <view class='icon-search search-icon {{loading?"loading":""}}' style='color:{{set?primaryColor:backgroundColor}};'></view>
+      <input class='{{focus}}' style='color:{{set?primaryColor:backgroundColor}}; background:{{set?backgroundColor:primaryColor}};' bindinput='inputkeyword' placeholder='搜索市、区、县等' placeholder-style='color:{{set?primaryColor:backgroundColor}};' value='{{keyword}}' bindfocus='focus' bindblur='blur' bindconfirm='getFirst' confirm-type='search'></input>
+      <view class='icon-clear clear-icon {{clearIcon}}' style='color:{{set?primaryColor:backgroundColor}};' bindtap='clearkeyword'></view>
+    </view>
+    <view class="city-toplist-{{keyword=='' ? 1 : 2}}">
+      <view class='locatnow'>
+        <view class='locat-txt' style='color:{{set?primaryColor:backgroundColor}};'>当前定位</view>
+        <view class='locat-item now odd' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{currentLonLat.lonlat}}' data-location='{{currentLonLat.city}}' bindtap='weather'>
+          {{currentLonLat.city}}
+        </view>
+      </view>
+      <view wx:if="{{locatHistory!=''}}" class='locathis'>
+        <view class='locat-txt' style='color:{{set?primaryColor:backgroundColor}};'>历史纪录</view>
+        <view class='icon-del clear-his' bindtap='clearHis' style='color:{{set?primaryColor:backgroundColor}};'></view>
+        <view class='locat-card his'>
+          <block wx:for='{{locatHistory}}' wx:for-item="hisItem" wx:for-index="idx" wx:key="unique">
+            <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{hisItem.lonlat}}' data-location='{{hisItem.city}}' bindtap='weather'>
+              {{hisItem.city}}
+            </view>
+            <view wx:else class='locat-item top' style='color:{{primaryColor}};background:{{backgroundColor}};' data-lon-lat='{{hisItem.lonlat}}' data-location='{{hisItem.city}}' bindtap='weather'>
+              {{hisItem.city}}
+            </view>
+          </block>
+        </view>
+      </view>
+      <view class='locattop'>
+        <view class='locat-txt' style='color:{{set?primaryColor:backgroundColor}};'>热门城市</view>
+        <view class='locat-card'>
+          <block wx:for='{{cityTop}}' wx:for-item="topItem" wx:for-index="idx" wx:key="unique">
+            <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{topItem.lon+","+topItem.lat}}' data-location='{{topItem.location}}' bindtap='weather'>
+              {{topItem.location}}
+            </view>
+            <view wx:else class='locat-item top' style='color:{{primaryColor}};background:{{backgroundColor}};' data-lon-lat='{{topItem.lon+","+topItem.lat}}' data-location='{{topItem.location}}' bindtap='weather'>
+              {{topItem.location}}
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view>
+      <block wx:for="{{citylist}}" wx:for-item="cityItem" wx:key="unique">
+        <view class='citylist-item' style='color:{{primaryColor}};background:{{backgroundColor}};' data-lon-lat='{{cityItem.lon+","+cityItem.lat}}' data-location='{{cityItem.location}}' bindtap='weather'>
+          <view class='key{{mod.indexOf(keyword,cityItem.admin_area)==-1?0:1}}'>
+            {{cityItem.admin_area}}
+          </view>
+          ，
+          <view class='key{{mod.indexOf(keyword,cityItem.parent_city)==-1?0:1}}'>
+            {{cityItem.parent_city}}
+          </view>
+          ，
+          <view class='key{{mod.indexOf(keyword,cityItem.location)==-1?0:1}}'>
+            {{cityItem.location}}
+          </view>
+        </view>
+      </block>
+      <view wx:if="{{cityTip!=''}}" class='citylist-item' style='color:{{primaryColor}};background:{{backgroundColor}};'>
+        {{cityTip}}
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,73 @@
+<view class='container'>
+  <view class='content'>
+  <view class='center-view'>
+    <view class="back-top {{logged?'':'blur'}}" style="background:{{set?primaryColor:backgroundColor}};">
+      <view class='userinfo' style="background:{{set?backgroundColor:primaryColor}};">
+        <button 
+          open-type="getUserInfo" 
+          bindgetuserinfo="onGetUserInfo"
+          class="userinfo-avatar"
+          style="background-image: url({{avatarUrl}})"
+        ></button>
+        <view class='userinfo-nickname' style="color:{{set?primaryColor:backgroundColor}};">{{userInfo.nickName}}</view>
+      </view>
+    </view>
+    <view class='progress {{logged?"":"blur"}}'    
+      style="background:{{primaryColor}};"
+      bindtap='showWords'
+      >
+      <view class='passed' style='width:{{passed}};color:{{primaryColor}};background:{{backgroundColor}};'>
+        <view class='passed-text {{words?"words":"percent"}}'>{{passedText}}</view>
+      </view>
+      <view class='left' style="color:{{backgroundColor}};">
+        <view class='left-text {{words?"words":"percent"}}'>{{leftText}}</view>
+      </view>
+    </view>
+    <view class='setting-list {{logged?"":"blur"}}'>
+      <view 
+        wx:for="{{settingItems}}" 
+        wx:for-item="item" 
+        wx:for-index="sid"
+        wx:key="sid"  
+        class='setting-item' 
+        hover-class='animated shake'
+        style='color:{{primaryColor}};background:{{backgroundColor}};'
+        bindtap='setItem{{item.value}}'
+        >
+        <view class="item-icon icon-{{item.icon}}"></view>
+        <view class="item-title">{{item.name}}</view>
+        <view class="item-detail">
+          <block wx:if='{{sid==0}}'>
+            {{colorName}}
+          </block>
+          <block wx:elif='{{sid==1}}'>
+            已有{{likeCount}}人喜欢
+            <view class='icon-heart like-icon {{like?"like":""}}'></view>
+          </block>
+          <block wx:elif='{{sid==2}}'>
+            liu.zerock@gmail.com
+          </block>
+          <block wx:elif='{{sid==3}}'>
+            已缓存{{usedSize}}KB
+          </block>
+          <block wx:else>
+            尽管没什么用
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class='get-user-info' style='display:{{logged?"none":"flex"}}'>
+      <view class='mod-box'>
+        <view class='mod-content' >（๑ • ‿ • ๑ ）</view>
+        <view class='mod-title' >此操作需要您授权个人信息</view>
+        <button 
+          class='mod-confirm' 
+          open-type="getUserInfo" 
+          hover-class='mod-confirm-hover'
+          bindgetuserinfo="onGetUserInfo">确认授权</button>
+      </view>
+    </view>
+    </view>
+    <tabbar color="{{set?primaryColor:backgroundColor}}" current="{{ current }}"></tabbar>
+  </view>
+</view>
