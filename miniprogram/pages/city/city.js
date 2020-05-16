@@ -20,15 +20,15 @@ Page({
     focus: '',  //  聚焦状态
     loading: false, //  加载动画
     primaryColor: '',
-    backgroundColor: '',
-    set: true
+    backgroundColor: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function () {
+  onLoad: function (option) {
     var that = this
+    console.log(option)
     that.setColors()
     //判断是否获得了用户地理位置授权
     wx.getSetting({
@@ -63,21 +63,19 @@ Page({
   setColors: function () {
     var primaryColor = app.color.primaryColor
     var backgroundColor = app.color.backgroundColor
-    var set = config.shadeColor(primaryColor)
     this.setData({
       primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
-      set: set
+      backgroundColor: backgroundColor
     })
 
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
-      backgroundColor: set ? primaryColor : backgroundColor,
+      backgroundColor: primaryColor,
     })
 
     wx.setTabBarStyle({
-      selectedColor: set ? primaryColor : backgroundColor,
-      backgroundColor: set ? backgroundColor : primaryColor
+      selectedColor: primaryColor,
+      backgroundColor: backgroundColor
     })
   },
 
@@ -366,5 +364,12 @@ Page({
       })
     }
   },
+
+  onShareAppMessage: function () {
+    return {
+      title: '我在' + this.data.currentLonLat.city + '(可能不太准)',
+      imageUrl: ''
+    }
+  }
 
 })

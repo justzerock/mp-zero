@@ -10,9 +10,11 @@ Page({
    * 页面的初始数据
    */
   data: {
-    avatarUrl:'../../img/user.png',
-    userInfo:{},
-    logged:true,
+    userInfo:{
+      avatarUrl:'../../img/avatar.png',
+      nickName: '👈 点击头像',
+    },
+    logged: false,
     settingItems: [
       {
         name: '主题色',
@@ -43,10 +45,9 @@ Page({
     passed: '0%',
     passedText: '',
     leftText: '',
-    primaryColor: '',
-    backgroundColor: '',
-    set: true,
-    colorName: '默认',
+    primaryColor: '#426666',
+    backgroundColor: '#f6f7f7',
+    colorName: '黛绿',
     usedSize: 0,
     likeCount: 0,
     like: false,
@@ -59,68 +60,78 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    wx.hideTabBar()    
+  onLoad: function (options) {    
     var that = this
     that.setColors()
     that.setSettingDetail()
     that.getLikeCount()
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              that.setData({
-                avatarUrl: res.userInfo.avatarUrl,
-                userInfo: res.userInfo,
-                logged:true,
-                openid:app.globalData.openid
-              })
-            }
-          })
-        } else {
-          that.setData({
-            logged:false
-          })
-        }
-      }
-    })
+    that.getUserInfo()
     setTimeout(function () {
       that.setYearPassed()
     }, 500)
   },
 
+  // 获取用户信息
   onGetUserInfo: function (e) {
     if (!this.logged && e.detail.userInfo) {
       this.setData({
         logged: true,
-        avatarUrl: e.detail.userInfo.avatarUrl,
         userInfo: e.detail.userInfo
       })
+      wx.setStorage({
+        key: 'userInfo',
+        data: e.detail.userInfo
+      })
+      wx.setStorage({
+        key: 'logged',
+        data: true
+      })
     }
+  },
+
+  // 从storage读取
+  getUserInfo: function () {
+    var that = this
+    wx.getStorage({
+      key: 'logged',
+      success (res) {
+        if (res.data) {
+          that.setData({
+            logged: res.data
+          })
+          wx.getStorage({
+            key: 'userInfo',
+            success (res) {
+              that.setData({
+                userInfo: res.data
+              })
+            }
+          })
+        }
+      }
+    })
   },
 
   /* 设置主题色 */
   setColors: function () {
     var primaryColor = app.color.primaryColor
     var backgroundColor = app.color.backgroundColor
-    var set = config.shadeColor(primaryColor)
+    var primaryName = app.color.primaryName
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
-      set: set,
+      primaryName: primaryName,
       current: 'center'
     })
     
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
-      backgroundColor: set ? primaryColor : backgroundColor,
+      backgroundColor: primaryColor,
     })
 
     wx.setTabBarStyle({
-      selectedColor: set ? primaryColor : backgroundColor,
-      backgroundColor: set ? backgroundColor : primaryColor
+      selectedColor: primaryColor,
+      backgroundColor: backgroundColor
     })
   },
 
@@ -273,13 +284,6 @@ Page({
   /* 设置菜单详情 */
   setSettingDetail: function () {
     var that = this
-    var colorName = ''
-    var primary = app.color.primary
-    if (primary[0] == '-1') {
-      colorName = '默认'
-    } else {
-      colorName = colors[primary[0]].colors[primary[1]].name
-    }
     wx.getStorageInfo({
       success (res) {
         that.setData({
@@ -288,7 +292,7 @@ Page({
       }
     })
     that.setData({
-      colorName: colorName
+      colorName: app.color.primaryName
     })
   },
 
@@ -306,9 +310,9 @@ Page({
     var that = this
     that.setColors()
     that.setSettingDetail()
-    setTimeout(function () {
-      that.setYearPassed()
-    }, 500)
+    this.setData({
+      passed: app.getProgress() + '%'
+    })
   },
 
   /**
@@ -316,7 +320,7 @@ Page({
    */
   onHide: function () {
     this.setData({
-      passed: '0%'
+      passed: app.getProgress()/2 + '%'
     })
   },
 
@@ -345,6 +349,9 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: '往者不可谏，来者犹可追',
+      imageUrl: ''
+    }
   }
 })

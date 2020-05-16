@@ -1,18 +1,29 @@
 <view class='container'>
-  <view class='content'>
+  <view class='content' style='background:linear-gradient({{primaryColor}}, 40%, {{backgroundColor}});'>
   <view class='center-view'>
-    <view class="back-top {{logged?'':'blur'}}" style="background:{{set?primaryColor:backgroundColor}};">
-      <view class='userinfo' style="background:{{set?backgroundColor:primaryColor}};">
+    <view class="back-top">
+        <!-- <button 
+          open-type="getUserInfo" 
+          bindgetuserinfo="onGetUserInfo"
+          class="userinfo"
+          style="background:{{backgroundColor}};"
+          
+        >
+          <view class='userinfo-avatar' style="background-image: url({{userInfo.avatarUrl}})">
+          </view>
+          <view class='userinfo-nickname' style="color:{{primaryColor}};">{{userInfo.nickName}}</view>
+        </button> -->
+      <view class='userinfo'>
         <button 
           open-type="getUserInfo" 
           bindgetuserinfo="onGetUserInfo"
           class="userinfo-avatar"
-          style="background-image: url({{avatarUrl}})"
+          style="background-image: url({{userInfo.avatarUrl}})"
         ></button>
-        <view class='userinfo-nickname' style="color:{{set?primaryColor:backgroundColor}};">{{userInfo.nickName}}</view>
+        <view class='userinfo-nickname' style="color:{{primaryColor}};">{{userInfo.nickName}}</view>
       </view>
     </view>
-    <view class='progress {{logged?"":"blur"}}'    
+    <view class='progress'    
       style="background:{{primaryColor}};"
       bindtap='showWords'
       >
@@ -23,14 +34,13 @@
         <view class='left-text {{words?"words":"percent"}}'>{{leftText}}</view>
       </view>
     </view>
-    <view class='setting-list {{logged?"":"blur"}}'>
+    <view class='setting-list'>
       <view 
         wx:for="{{settingItems}}" 
         wx:for-item="item" 
         wx:for-index="sid"
         wx:key="sid"  
         class='setting-item' 
-        hover-class='animated shake'
         style='color:{{primaryColor}};background:{{backgroundColor}};'
         bindtap='setItem{{item.value}}'
         >
@@ -56,18 +66,7 @@
         </view>
       </view>
     </view>
-    <view class='get-user-info' style='display:{{logged?"none":"flex"}}'>
-      <view class='mod-box'>
-        <view class='mod-content' >（๑ • ‿ • ๑ ）</view>
-        <view class='mod-title' >此操作需要您授权个人信息</view>
-        <button 
-          class='mod-confirm' 
-          open-type="getUserInfo" 
-          hover-class='mod-confirm-hover'
-          bindgetuserinfo="onGetUserInfo">确认授权</button>
-      </view>
     </view>
-    </view>
-    <tabbar color="{{set?primaryColor:backgroundColor}}" current="{{ current }}"></tabbar>
   </view>
+    <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}"></tabbar>
 </view>

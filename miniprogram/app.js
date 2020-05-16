@@ -1,21 +1,20 @@
 //app.js
 App({
   color: {
-    primaryColor: '',
-    backgroundColor: '',
-    swcolor: true,
-    primary: [-1, -1]
+    primaryColor: '#426666',
+    backgroundColor: '#f6f7f7',
+    primaryName: '黛绿'
   },
   globalData: {
     openid: ''
   },
   onLaunch: function () {
+    /* wx.hideTabBar() */
     var that = this
     that.color = wx.getStorageSync('colorSet') || {
-      primaryColor: '#579789',
-      backgroundColor: '#F5F9F8',
-      swcolor: true,
-      primary: [-1, -1]
+      primaryColor: '#426666',
+      backgroundColor: '#f6f7f7',
+      primaryName: '黛绿'
     }
     
     wx.cloud.init({
@@ -31,6 +30,10 @@ App({
         that.onGetOpenid()
       }
     })
+  },
+
+  onShow: function () {
+    /* wx.hideTabBar() */
   },
 
   getProgress: function () {

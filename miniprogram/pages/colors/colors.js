@@ -14,10 +14,9 @@ Page({
     dispTi: [],
     anim: {},
     state: -1,
-    primary: [],
-    primaryColor: '',
-    backgroundColor: '',
-    swcolor: true,
+    primaryName: '黛绿',
+    primaryColor: '#426666',
+    backgroundColor: '#f6f7f7',
     colorHei: 0,
   },
 
@@ -39,8 +38,7 @@ Page({
       dispTi: ti,
       primaryColor: app.color.primaryColor,
       backgroundColor: app.color.backgroundColor,
-      swcolor: app.color.swcolor,
-      primary: app.color.primary
+      primaryName: app.color.primaryName
     })
   },
 
@@ -77,51 +75,31 @@ Page({
 
   setColors: function (e) {
     var that = this
-    var colorArr = e.currentTarget.dataset.colorIndex.split(',')
-    var primary = that.data.primary
-    if (primary[0] == colorArr[0] && primary[1] == colorArr[1]) return
+    var colorArr = e.currentTarget.dataset.colorValue.split(',')
+    var primaryName = that.data.primaryName
+    if (primaryName === colorArr[0]) return
     var primaryColor = ''
     var backgroundColor = ''
-    var swcolor = that.data.swcolor
-    if (swcolor) {
-      primaryColor = colorArr[2]
-      backgroundColor = colorArr[3]
-    } else {
-      primaryColor = colorArr[3]
-      backgroundColor = colorArr[2]
-    }
-    that.toSet(primaryColor, backgroundColor, swcolor, [colorArr[0], colorArr[1]])
+    primaryColor = colorArr[1]
+    backgroundColor = colorArr[2]
+    that.toSet(primaryColor, backgroundColor, colorArr[0])
     that.setData({
-      primary: [colorArr[0], colorArr[1]],
+      primaryName: colorArr[0],
     })
   },
 
-  switchColors: function () {
-    var that = this
-    var primary = that.data.primary
-    var swcolor = that.data.swcolor
-    swcolor = !swcolor
-    var primaryColor = that.data.backgroundColor
-    var backgroundColor = that.data.primaryColor
-    that.toSet(primaryColor, backgroundColor, swcolor, primary)
-    that.setData({
-      swcolor: swcolor
-    })
-  },
-
-  toSet: function (primaryColor, backgroundColor, swcolor, primary) {
+  toSet: function (primaryColor, backgroundColor, primaryName) {
     wx.setStorage({
       key: 'colorSet',
       data: {
         primaryColor: primaryColor,
         backgroundColor: backgroundColor,
-        swcolor: swcolor,
-        primary: primary
+        primaryName: primaryName
       }
     })
     app.color.primaryColor = primaryColor
     app.color.backgroundColor = backgroundColor
-    app.color.primary = primary
+    app.color.primaryName = primaryName
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor

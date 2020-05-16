@@ -10,14 +10,13 @@
 
 /* 显示城市 */
 .locat-view {
-  height: 80rpx;
+  height: 60rpx;
   width: 100%;
   display: flex;
-  position: absolute;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  font-size: 30rpx;
 }
 
 .locat-text {
@@ -34,10 +33,10 @@
 .weather-swiper {
   display: flex;
   width: 100%;
-  margin-top: 60rpx;
-  margin-bottom: 40rpx;
   position: relative;
   z-index: 1;
+  opacity: 0.85;
+  height: calc(100% - 40rpx) !important;
 }
 
 .weather-swiper-item {
@@ -53,13 +52,29 @@
   position: relative;
   align-items: center;
   flex-direction: column;
-  height: 100%;
-  margin: 50rpx 10% auto;
+  flex: 1;
+  margin: auto 50rpx 0;
   border-radius: 10rpx;
-  border: 5rpx solid #fff;
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
-  /* background: #f5f7f9; */
-  box-sizing: border-box;
+  box-shadow: 2px 2px 4px  rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease-in-out;
+  animation: card-show 1s;
+}
+
+.swiper-card:active {
+  box-shadow: 1px 1px 1px  rgba(0, 0, 0, 0.08);
+  opacity: 0.8;
+  transform: scale(0.99);
+}
+
+@keyframes card-show {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .list.swiper-card {
@@ -84,11 +99,15 @@
   margin: 20rpx 5%;
   border-radius: 20rpx;
   border: 5rpx solid #fff;
-  box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   will-change: transition;
   transition: all .2s;
   font-family: 'song';
+}
+
+.list-card:active {
+  box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.08);
 }
 
 .list-card-hover {
@@ -188,14 +207,11 @@
 
 .upd-text {
   font-size: 30rpx;
-  display: inline-flex;
-  flex-grow: 1;
-  /* color: #7497bb; */
+  position: absolute;
   will-change: transition;
   transition: all 1s linear;
-  justify-content: flex-end;
-  align-items: center;
-  margin-right: 20rpx;
+  right: 20rpx;
+  top: 20rpx;
   font-family: 'song';
 }
 
@@ -264,10 +280,6 @@
   }
 }
 
-.cond-img.others {
-  animation: others 15s linear infinite;
-}
-
 @keyframes others {
   0% {
     transform: translate(0,0);
@@ -320,17 +332,17 @@
 }
 @keyframes float-sun {
   0% {
-    opacity: 25;
+    opacity: 0.25;
   }
   25% {
-    opacity: 100;    
+    opacity: 1;    
   }
   100% {
     opacity: 0;
   }
 }
 .cloud-float.others {
-  opacity: 25;
+  opacity: 0.5;
 }
 .cloud1,.cloud2 {
   display: inline-flex;
@@ -622,7 +634,7 @@
   width:100%;
   height:40rpx;
   justify-content:center;
-  bottom:97rpx;
+  bottom:0;
 }
 
 .dots .dot {
@@ -650,4 +662,82 @@
   100% {
     opacity: 100;
   }
+}
+
+.small-weather {
+  width: calc(100% - 84rpx);
+  margin: auto auto 20rpx;
+  font-size: 28rpx;
+  position: relative;
+  animation: card-show 1s;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.small-weather .small {
+  display: inline-table;
+  border-radius: 10rpx;
+  position: relative;
+  flex-direction: column;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+  transition: all .25s ease-in-out;
+  width: calc(50% - 16rpx);
+  margin: 10rpx 8rpx;
+}
+
+.small-weather .small:active {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.08);
+  opacity: 0.8;
+  transform: scale(0.99);
+}
+
+.small-weather .small .line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.small-weather .small .line.one {
+  margin: 20rpx 20rpx auto;
+}
+.small-weather .small .line.two {
+  margin: auto 20rpx 20rpx;
+}
+
+.small-weather .small .line .small-icon {
+  font-size: 40rpx;
+}
+
+.add-weather {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-weather .circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 256rpx;
+  height: 256rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+  position: absolute;
+  transition: all .15s ease-in-out;
+}
+
+.add-weather .circle:active {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.08);
+  transform: scale(0.99);
+  opacity: 0.8;
+}
+
+.add-weather .icon {
+  font-size: 100rpx;
+}
+
+.add-weather .title {
+  font-size: 30rpx;
 }

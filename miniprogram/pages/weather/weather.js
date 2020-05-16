@@ -1,10 +1,12 @@
-var config = require('../../libs/config.js');
-var key = config.heweather.key;
-var app = getApp()
+const config = require('../../libs/config.js');
+const hekey = config.heweather.key;
+const amapkey = config.amap.key
+const app = getApp()
 Page({
   data: {
     nowtext: 'Now',
     weather: '',
+    weathers: [],
     swiperCurrent: 0,
     now: 'flex',
     life: 'none',
@@ -20,17 +22,23 @@ Page({
     backgroundColor: '',
     styleBtn: '',
     current: '',
-    set: true,
     autoplay: true,
     showLife: false,
-    animated: false
+    animated: false,
+    smallSwiperOpt: {
+      autoplay: false,
+      circular: true,
+      previousMargin: '20rpx',
+      nextMargin: '20rpx',
+      displayMultipleItems: 2
+    }
   },
 
-  onLoad: function () {
-    wx.hideTabBar()    
+  onLoad: function () { 
     var that = this
     that.setColors()
     that.getSavedCity()
+    that.getWeathers()
     var savedCity = that.data.savedCity
     if (savedCity == '') {
       that.getLocatAndWeather()
@@ -53,26 +61,36 @@ Page({
     })
   },
 
+  getWeathers: function () {
+    let that = this
+    wx.getStorage({
+      key: 'weathers',
+      success (res) {
+        that.setData({
+          weathers: res.data
+        })
+      }
+    })
+  },
+
   /* 设置主题色 */
   setColors: function () {
     var primaryColor = app.color.primaryColor
     var backgroundColor = app.color.backgroundColor
-    var set = config.shadeColor(primaryColor)
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
       current: 'weather',
-      set: set
     })
 
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
-      backgroundColor: set ? primaryColor : backgroundColor,
+      backgroundColor: primaryColor
     })
 
     wx.setTabBarStyle({
-      selectedColor: set ? primaryColor : backgroundColor,
-      backgroundColor: set ? backgroundColor : primaryColor
+      selectedColor: '#fff',
+      backgroundColor: primaryColor
     })
   },
 
@@ -117,9 +135,15 @@ Page({
       confirmColor: this.data.primaryColor,
     }) */
   },
-  searchcity: function () {
+  searchcity: function (e) {
+    let id = e.currentTarget.id
     wx.navigateTo({
-      url: '../city/city',
+      url: '../city/city?id=' + id,
+    })
+  },
+  addcity: function () {
+    wx.navigateTo({
+      url: '../city/city?id=new',
     })
   },
   getWeather: function (lonlat, city) {
@@ -154,18 +178,33 @@ Page({
       url: 'https://free-api.heweather.com/s6/weather?',
       data: {
         location: lonlat,
-        key: key
+        key: hekey
       },
       header: {
         'content-type': 'application/json'
       },
       success: function (res) {
+        let weatherData = res.data.HeWeather6[0]
+        let weatherId = weatherData.basic.cid
         that.setData({
-          weather: res.data.HeWeather6[0]
+          weather: weatherData
         })
         wx.setStorage({
           key: 'weatherData',
-          data: res.data.HeWeather6[0]
+          data: weatherData
+        })
+        let weathers = that.data.weathers
+        let weatherIndex = weathers.findIndex( item => item.id == weatherId )
+        let obj = {
+          id: weatherId,
+          data: weatherData
+        }
+        if (weatherIndex === -1) {
+          weathers.push(obj)
+        }
+        wx.setStorage({
+          key: 'weathers',
+          data: weathers
         })
       },
       complete: function () {
@@ -188,9 +227,31 @@ Page({
       type: 'wgs84',
       success: function (res) {
         that.getWeather(res.longitude + ',' + res.latitude, '')
+        that.setData({
+          lonlat: res.longitude + ',' + res.latitude
+        })
       },
       fail: function () {
         that.getWeather(lonlat, '北京')
+      }
+    })
+  },
+
+  /* 获取地区名称（默认从和风获取的地区名称不准确） */
+  getDistrict: function(lonlat) {
+    wx.request({
+      url: 'https://restapi.amap.com/v3/geocode/regeo?',
+      data: {
+        location: lonlat,
+        key: amapkey
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+      success: function (res) {
+        console.log(res)
+      },
+      complete: function () {
       }
     })
   },
@@ -208,6 +269,9 @@ Page({
     this.onLoad()
   },
 
+  onHide: function () {
+  },
+
   /* 点击Now时更新数据 */
   upd: function () {
     this.getWeather(this.data.savedCity.lonlat||this.data.lonlat, '')
@@ -222,6 +286,21 @@ Page({
     })
   },
 
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    let weather = this.data.weather
+    let city = 
+      weather.basic.location === weather.basic.parent_city ? 
+      weather.basic.location : 
+      weather.basic.parent_city + ' ' + weather.basic.location
+    return {
+      title: city + ' ' + weather.now.cond_txt + ' ' + weather.now.tmp + '°',
+      imageUrl: ''
+    }
+  },
+
   onPullDownRefresh: function () {
     this.getWeather(this.data.savedCity.lonlat || this.data.lonlat, '')
     wx.stopPullDownRefresh()    
@@ -232,9 +311,6 @@ Page({
     that.setData({
       autoplay: false
     })
-    var set = that.data.set
-    var pc = that.data.primaryColor
-    var bc = that.data.backgroundColor
     var index = e.currentTarget.dataset.index
     var dayTmp = that.data.weather.daily_forecast[index]
     var content = '日升：'+ dayTmp.sr 
@@ -247,7 +323,7 @@ Page({
       content: content,
       showCancel: false,
       confirmText: '了解',
-      confirmColor: set?pc:bc,
+      confirmColor: that.data.primaryColor,
       success (res) {
         if (res.confirm) {
           that.setData({

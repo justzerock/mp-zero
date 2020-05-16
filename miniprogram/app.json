@@ -2,8 +2,6 @@
   "cloud": true,
   "pages": [
     "pages/weather/weather",
-    "pages/dict/dict",
-    "pages/baike/baike",
     "pages/city/city",
     "pages/colors/colors",
     "pages/center/center",
@@ -16,6 +14,7 @@
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
+    "custom": true,
     "color": "#BEBEBE",
     "selectedColor": "#549688",
     "backgroundColor": "#F6FAF9",
@@ -25,27 +24,16 @@
         "pagePath": "pages/weather/weather",
         "text": "天气",
         "iconPath": "img/weather.png",
-        "selectedIconPath": "img/weathero.png"
-      },
-      {
-        "pagePath": "pages/dict/dict",
-        "text": "词典",
-        "iconPath": "img/dict.png",
-        "selectedIconPath": "img/dicto.png"
-      },
-      {
-        "pagePath": "pages/baike/baike",
-        "text": "百科",
-        "iconPath": "img/baike.png",
-        "selectedIconPath": "img/baikeo.png"
+        "selectedIconPath": "img/weather-sel.png"
       },
       {
         "pagePath": "pages/center/center",
         "text": "我的",
         "iconPath": "img/user.png",
-        "selectedIconPath": "img/usero.png"
+        "selectedIconPath": "img/user-sel.png"
       }
     ]
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "usingComponents": {}
 }

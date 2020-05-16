@@ -1,30 +1,3 @@
-<wxs module='mod'>
-  var tcrgb = require('./tcRgb.wxs')
-  var shadeColor = function(hex) {
-    if (hex.indexOf('#') === 0) {
-      hex = hex.slice(1);
-    }
-    // convert 3-digit hex to 6-digits.
-    if (hex.length === 3) {
-      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-    }
-    if (hex.length !== 6) {
-      throw new Error('Invalid HEX color.');
-    }
-    var r = parseInt(hex.slice(0, 2), 16),
-      g = parseInt(hex.slice(2, 4), 16),
-      b = parseInt(hex.slice(4, 6), 16);
-    var rgb = [r, g, b];
-    //186
-    return (r * 0.299 + g * 0.587 + b * 0.114) > 180 ?
-      tcrgb.tcrgb(rgb, -0.4) :
-      tcrgb.tcrgb(rgb, 0.95);
-  }
-
-  module.exports = {
-    shadeColor: shadeColor
-  }
-</wxs>
 <view class='container'>
   <view class='tc-colors'>
     <block wx:for='{{tcColors}}' wx:for-item='serial' wx:for-index="sid" wx:key='sid'>
@@ -39,20 +12,27 @@
               <view class='value'>{{color.value}}</view>
               <view class='name'>{{color.name}}</view>
             </view>
-            <view class='action {{state==cid ? "selected" : "" }}' style="color:{{primaryColor}}; background:{{backgroundColor}};">
-              <view class="set-item" hover-class="set-item-hover" data-color-index="{{sid+','+cid+','+color.value+','+color.fvalue}}" bindtap='setColors'>
+            <view 
+              class='action {{state==cid ? "selected" : "" }}' 
+              style="color:{{color.value}}; background:{{color.fvalue}};"
+            >
+              <view 
+                class="set-item" 
+                hover-class="set-item-hover" 
+                data-color-value="{{color.name+','+color.value+','+color.fvalue}}" 
+                bindtap='setColors'
+              >
                 <radio-group class="set-icon">
-                  <radio class="set-radio" checked="{{primary[0]==sid&&primary[1]==cid? true : false}}" />
+                  <radio class="set-radio" checked="{{primaryColor === color.value ? true : false}}" />
                 </radio-group>
                 <view class="set-title">选此配色</view>
               </view>
-              <view class="set-item" hover-class="set-item-hover" bindtap='switchColors'>
-                <radio-group class="set-icon">
-                  <radio class="set-radio" checked="{{swcolor? true : false}}" disabled="{{primary[0]==sid&&primary[1]==cid? false : true}}" />
-                </radio-group>
-                <view class="set-title">反转颜色</view>
-              </view>
-              <view class="set-item" hover-class="set-item-hover" data-the-color='{{color.value}}' bindtap='copyColor'>
+              <view 
+                class="set-item" 
+                hover-class="set-item-hover" 
+                data-the-color='{{color.value}}' 
+                bindtap='copyColor'
+              >
                 <view class="icon-copy set-icon"></view>
                 <view class="set-title">复制颜色</view>
               </view>

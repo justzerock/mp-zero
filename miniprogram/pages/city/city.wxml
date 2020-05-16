@@ -6,21 +6,21 @@
 </wxs>
 <view class='container'>
   <view class='content'>
-    <view class='search-bar' style='background:{{set?primaryColor:backgroundColor}};'>
-      <view class='icon-search search-icon {{loading?"loading":""}}' style='color:{{set?primaryColor:backgroundColor}};'></view>
-      <input class='{{focus}}' style='color:{{set?primaryColor:backgroundColor}}; background:{{set?backgroundColor:primaryColor}};' bindinput='inputkeyword' placeholder='搜索市、区、县等' placeholder-style='color:{{set?primaryColor:backgroundColor}};' value='{{keyword}}' bindfocus='focus' bindblur='blur' bindconfirm='getFirst' confirm-type='search'></input>
-      <view class='icon-clear clear-icon {{clearIcon}}' style='color:{{set?primaryColor:backgroundColor}};' bindtap='clearkeyword'></view>
+    <view class='search-bar' style='background:{{primaryColor}};'>
+      <view class='icon-search search-icon {{loading?"loading":""}}' style='color:{{primaryColor}};'></view>
+      <input class='{{focus}}' style='color:{{primaryColor}}; background:{{backgroundColor}};' bindinput='inputkeyword' placeholder='搜索市、区、县等' placeholder-style='color:{{primaryColor}};' value='{{keyword}}' bindfocus='focus' bindblur='blur' bindconfirm='getFirst' confirm-type='search'></input>
+      <view class='icon-clear clear-icon {{clearIcon}}' style='color:{{primaryColor}};' bindtap='clearkeyword'></view>
     </view>
     <view class="city-toplist-{{keyword=='' ? 1 : 2}}">
       <view class='locatnow'>
-        <view class='locat-txt' style='color:{{set?primaryColor:backgroundColor}};'>当前定位</view>
+        <view class='locat-txt' style='color:{{primaryColor}};'>当前定位</view>
         <view class='locat-item now odd' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{currentLonLat.lonlat}}' data-location='{{currentLonLat.city}}' bindtap='weather'>
           {{currentLonLat.city}}
         </view>
       </view>
       <view wx:if="{{locatHistory!=''}}" class='locathis'>
-        <view class='locat-txt' style='color:{{set?primaryColor:backgroundColor}};'>历史纪录</view>
-        <view class='icon-del clear-his' bindtap='clearHis' style='color:{{set?primaryColor:backgroundColor}};'></view>
+        <view class='locat-txt' style='color:{{primaryColor}};'>历史纪录</view>
+        <view class='icon-del clear-his' bindtap='clearHis' style='color:{{primaryColor}};'></view>
         <view class='locat-card his'>
           <block wx:for='{{locatHistory}}' wx:for-item="hisItem" wx:for-index="idx" wx:key="unique">
             <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{hisItem.lonlat}}' data-location='{{hisItem.city}}' bindtap='weather'>
@@ -33,7 +33,7 @@
         </view>
       </view>
       <view class='locattop'>
-        <view class='locat-txt' style='color:{{set?primaryColor:backgroundColor}};'>热门城市</view>
+        <view class='locat-txt' style='color:{{primaryColor}};'>热门城市</view>
         <view class='locat-card'>
           <block wx:for='{{cityTop}}' wx:for-item="topItem" wx:for-index="idx" wx:key="unique">
             <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{topItem.lon+","+topItem.lat}}' data-location='{{topItem.location}}' bindtap='weather'>

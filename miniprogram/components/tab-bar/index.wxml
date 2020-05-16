@@ -1,16 +1,16 @@
-<view class="weibo-tabbar">
+<view class="weibo-tabbar" style="background: {{background}}">
   <view class="item" bindtap="switch" data-hi="weather">
     <icon type="weather" color="{{current=='weather'?color:other}}" size="45" />
     <text class="1" style="color:{{current=='weather'?color:other}}">天气</text>
   </view>
-  <view class="item" bindtap="switch" data-hi="dict">
+  <!-- <view class="item" bindtap="switch" data-hi="dict">
     <icon type="dict" color="{{current=='dict'?color:other}}" size="45" />
     <text class="1" style="color:{{current=='dict'?color:other}}">词典</text>
   </view>
   <view class="item" bindtap="switch" data-hi="baike">
     <icon type="baike" color="{{current=='baike'?color:other}}" size="45" />
     <text class="1" style="color:{{current=='baike'?color:other}}">百科</text>
-  </view>
+  </view> -->
   <view class="item" bindtap="switch" data-hi="center">
     <icon type="center" color="{{current=='center'?color:other}}" size="45" />
     <text class="1" style="color:{{current=='center'?color:other}}">我的</text>

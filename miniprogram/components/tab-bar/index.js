@@ -5,6 +5,10 @@ Component({
       type: String,
       value: ''
     },
+    background: {
+      type: String,
+      value: ''
+    },
     current: {
       type: String,
       value: ''
@@ -12,7 +16,7 @@ Component({
   },
   data: {
     // 这里是一些组件内部数据
-    other: '#B4B4B4'
+    other: 'rgba(0, 0, 0, 0.3)'
   },
   methods: {
     // 这里是一个自定义方法
