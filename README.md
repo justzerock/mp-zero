@@ -38,9 +38,9 @@
 
    
 
-![年进度](https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/200521year.png)
+<img src="https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/200521year.png" alt="年进度" height='80' />
 
-![昼夜比例](https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/200521daynight.png)
+<img src="https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/200521daynight.png" alt="昼夜比例" height='80' />
 
 
 
