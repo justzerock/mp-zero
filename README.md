@@ -1,2 +1,55 @@
-# mp-zero
-微信小程序
+# 知晴否
+
+![知晴否](https://cdn.jsdelivr.net/gh/justzerock/mp-zero@master/miniprogram/img/avatar.png)
+
+<font size=5>如</font>你所见，这是个天气小程序
+
+
+
+使用了<font color='#24BFA5'>和风天气</font>的 API
+
+在此感谢
+
+可以设置最多5个地区的天气
+
+
+
+有多种<font color='#24BFA5'>主题色</font>供你选择，很多很多
+
+🧡💛💚💙💜🖤❤
+
+不过每一种都是差不多的单调，枯燥
+
+
+
+设置页的<font color='#24BFA5'>点赞</font>功能
+
+比官方来得早
+
+内外皆可赞👍
+
+
+
+点击<font color="#24BFA5">年度进度条</font>
+
+显示一句论语：
+
+   
+
+![年进度](https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/200521year.png)
+
+![昼夜比例](https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/200521daynight.png)
+
+
+
+两者所在的宽度比例
+
+代表了当天昼夜长度的比例🌞🌛
+
+数据取自第一个地区的日升日落时间
+
+再次感谢<font color="#24BFA5">和风天气</font>🤝
+
+
+
+谢谢使用
