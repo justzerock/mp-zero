@@ -1,19 +1,26 @@
 // pages/about/about.js
+const config = require('../../libs/config.js');
+const avatarUrl = config.avatar.link;
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    avatarUrl: avatarUrl
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    wx.setNavigationBarColor({
+      backgroundColor: '#fff',
+      frontColor: '#000000',
+    })
   },
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成

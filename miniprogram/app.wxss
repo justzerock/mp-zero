@@ -2,8 +2,6 @@
 @import "font/icon.wxss";
 @import "font/he.wxss";
 @import "font/song.wxss";
-@import "font/fcolor.wxss";
-@import "font/animate.wxss";
 
 button::after {
   border: none;

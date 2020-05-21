@@ -7,6 +7,11 @@
     "pages/center/center",
     "pages/about/about"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于获取本地天气"
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#549688",
@@ -14,7 +19,6 @@
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
-    "custom": true,
     "color": "#BEBEBE",
     "selectedColor": "#549688",
     "backgroundColor": "#F6FAF9",

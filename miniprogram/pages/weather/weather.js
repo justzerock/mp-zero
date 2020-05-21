@@ -1,26 +1,20 @@
 const config = require('../../libs/config.js');
 const hekey = config.heweather.key;
-const amapkey = config.amap.key
 const app = getApp()
 Page({
   data: {
-    nowtext: 'Now',
     weather: '',
     weathers: [],
     swiperCurrent: 0,
-    now: 'flex',
-    life: 'none',
-    btntext: '未来一日',
     loading: false,
-    refreshing: false,
-    showrefresh: false,
-    savedCity: '',
+    showUpdate: false,
+    showDelBtn: false,
+    savedLocation: [],
     lonlat: '116.4052887,39.90498734', //  默认北京坐标
     platform: '',
     deviceHeight: '',
     primaryColor: '',
     backgroundColor: '',
-    styleBtn: '',
     current: '',
     autoplay: true,
     showLife: false,
@@ -35,15 +29,16 @@ Page({
   },
 
   onLoad: function () { 
-    var that = this
+    wx.hideTabBar()
+    let that = this
     that.setColors()
-    that.getSavedCity()
+    that.getSavedLocation()
     that.getWeathers()
-    var savedCity = that.data.savedCity
-    if (savedCity == '') {
-      that.getLocatAndWeather()
+    let savedLocation = that.data.savedLocation
+    if (savedLocation.length < 1) {
+      that.getLocation()
     } else {
-      that.getWeather(savedCity.lonlat, savedCity.city)
+      that.getWeather(savedLocation)
     }
     wx.getSystemInfo({
       success: (res) => {
@@ -53,30 +48,19 @@ Page({
         });
       }
     });
-    var dark = this.data.primaryColor
-    var light = this.data.backgroundColor
-    var styleBtn = 'color:' + dark + ';background:' + light + ';'
-    that.setData({
-      styleBtn: styleBtn
-    })
   },
 
   getWeathers: function () {
     let that = this
-    wx.getStorage({
-      key: 'weathers',
-      success (res) {
-        that.setData({
-          weathers: res.data
-        })
-      }
+    that.setData({
+      weathers: wx.getStorageSync('weathers') || []
     })
   },
 
   /* 设置主题色 */
   setColors: function () {
-    var primaryColor = app.color.primaryColor
-    var backgroundColor = app.color.backgroundColor
+    let primaryColor = app.color.primaryColor
+    let backgroundColor = app.color.backgroundColor
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
@@ -88,10 +72,6 @@ Page({
       backgroundColor: primaryColor
     })
 
-    wx.setTabBarStyle({
-      selectedColor: '#fff',
-      backgroundColor: primaryColor
-    })
   },
 
   swiperChange: function (e) {
@@ -100,167 +80,131 @@ Page({
     })
   },
 
-  switchCard: function () {
-    var now = this.data.now
-    var life = this.data.life
-    var dark = this.data.primaryColor
-    var light = this.data.backgroundColor
-    var text = now == 'flex' ? '实时天气' : '未来一日'
-    var styleBtn = now == 'flex' ? 'color:' + light + ';background:' + dark + ';' : 'color:' + dark + ';background:' + light + ';'
-    this.setData({
-      now: life,
-      life: now,
-      btntext: text,
-      styleBtn: styleBtn
-    })
-  },
-  showlife: function (e) {
-    var that = this
-    var animated = that.data.animated
-    that.setData({
-      animated: true
-    })
-    var showLife = that.data.showLife
-    setTimeout(function() {
-      that.setData({
-        showLife: !showLife,
-        animated: false
-      })
-    }, 300)
-    /* wx.showModal({
-      title: '',
-      content: e.currentTarget.dataset.lifeTxt,
-      showCancel: false,
-      confirmText: '明白',
-      confirmColor: this.data.primaryColor,
-    }) */
-  },
-  searchcity: function (e) {
+  updateLocation: function (e) {
     let id = e.currentTarget.id
     wx.navigateTo({
-      url: '../city/city?id=' + id,
+      url: '../city/city?id=' + id
     })
   },
-  addcity: function () {
-    wx.navigateTo({
-      url: '../city/city?id=new',
-    })
-  },
-  getWeather: function (lonlat, city) {
-    var that = this
+
+  getWeather: async function (locations) {
+    let that = this
     that.setData({
-      loading: true,
-      refreshing: true
+      loading: true
     })
-    var weather = wx.getStorageSync('weatherData') || ''
-    if (weather != '') {
-      var loc = weather.update.loc.replace(/-/g, '/') || new Date()
-      var location = weather.basic.location || ''
-      var updateTime = new Date(loc)
-      var nowTime = new Date()
-      var difTime = nowTime.getTime() - updateTime.getTime()
-      var difHour = Math.floor(difTime / (3600 * 1000))
-      if (location == city && difHour <= 2) {
-        that.setData({
-          weather: weather,
-        })
-        setTimeout(function () {
-          that.setData({
-            refreshing: false,
-            loading: false
-          })
-        }, 500);
-        return
+    let weathers = wx.getStorageSync('weathers') || []
+    let forceUpdate = wx.getStorageSync('forceUpdate') || false
+    let newWeathers = []
+    wx.showNavigationBarLoading()
+    if ( !forceUpdate && weathers.length > 0) {
+      for (let weather of weathers ) {
+        let loc = weather.update.loc.replace(/-/g, '/')
+        let cid = weather.basic.cid
+        let updateTime = new Date(loc).getTime()
+        let nowTime = Date.now()
+        let difHour = Math.floor((nowTime - updateTime) / (3600 * 1000))
+        if (difHour <= 1) {
+          newWeathers.push(weather)
+        } else {
+          let newData = await that.getWeatherData(cid)
+          newWeathers.push(newData)
+        }
+      }
+    } else {
+      for (let location of locations ) {
+        let newData = await that.getWeatherData(location.cid)
+        newWeathers.push(newData)
       }
     }
-    wx.showNavigationBarLoading()
-    wx.request({
+    wx.setStorageSync('forceUpdate', false)
+    that.setData({
+      weathers: newWeathers,
+      showUpdate: true,
+    })
+    wx.setStorage({
+      data: newWeathers,
+      key: 'weathers',
+    })
+    wx.hideNavigationBarLoading()
+    that.setData({
+      loading: false
+    })
+    setTimeout(function () {      
+      that.setData({
+        showUpdate: false
+      })
+    }, 5000);
+  },
+
+  /* 获取天气数据 */
+  getWeatherData: async function (cid) {
+    let newData = await app.request({
       url: 'https://free-api.heweather.com/s6/weather?',
       data: {
-        location: lonlat,
+        location: cid,
         key: hekey
       },
       header: {
         'content-type': 'application/json'
-      },
-      success: function (res) {
-        let weatherData = res.data.HeWeather6[0]
-        let weatherId = weatherData.basic.cid
-        that.setData({
-          weather: weatherData
-        })
-        wx.setStorage({
-          key: 'weatherData',
-          data: weatherData
-        })
-        let weathers = that.data.weathers
-        let weatherIndex = weathers.findIndex( item => item.id == weatherId )
-        let obj = {
-          id: weatherId,
-          data: weatherData
-        }
-        if (weatherIndex === -1) {
-          weathers.push(obj)
-        }
-        wx.setStorage({
-          key: 'weathers',
-          data: weathers
-        })
-      },
-      complete: function () {
-        wx.hideNavigationBarLoading()
-        setTimeout(function () {
-          that.setData({
-            refreshing: false,
-            loading: false
-          })
-        }, 500);
       }
     })
+    return newData.data.HeWeather6[0]
   },
 
-  /* 获取天气 */
-  getLocatAndWeather: function () {
-    var that = this
-    var lonlat = that.data.lonlat
+  /* 获取坐标 */
+  getLocation: function () {
+    let that = this
+    let lonlat = that.data.lonlat
     wx.getLocation({
       type: 'wgs84',
       success: function (res) {
-        that.getWeather(res.longitude + ',' + res.latitude, '')
-        that.setData({
-          lonlat: res.longitude + ',' + res.latitude
-        })
+        that.getLocationCid(res.longitude + ',' + res.latitude)
       },
       fail: function () {
-        that.getWeather(lonlat, '北京')
+        that.getLocationCid(lonlat)
       }
     })
   },
 
-  /* 获取地区名称（默认从和风获取的地区名称不准确） */
-  getDistrict: function(lonlat) {
+  /* 获取地区cid */
+  getLocationCid: function (lonlat) {
+    let that = this
+    let savedLocation = []
     wx.request({
-      url: 'https://restapi.amap.com/v3/geocode/regeo?',
+      url: 'https://search.heweather.com/find?',
       data: {
-        location: lonlat,
-        key: amapkey
+        key: hekey,
+        location: lonlat
       },
       header: {
         'content-type': 'application/json'
       },
       success: function (res) {
-        console.log(res)
-      },
-      complete: function () {
+        if (res.data.HeWeather6[0].status == 'ok') {
+          let location = res.data.HeWeather6[0].basic[0]
+          savedLocation.push(location)
+          that.getWeather(savedLocation)
+          that.setData({
+            savedLocation: savedLocation
+          })
+          wx.setStorage({
+            key: 'savedLocation',
+            data: savedLocation
+          })
+          wx.setStorage({
+            data: location,
+            key: 'currentLocation',
+          })
+        }
       }
     })
   },
 
   /* 获取储存的城市 */
-  getSavedCity: function () {
-    var that = this
+  getSavedLocation: function () {
+    let that = this
     that.setData({
-      savedCity: wx.getStorageSync('savedCity') || ''
+      savedLocation: wx.getStorageSync('savedLocation') || []
     })
   },
 
@@ -272,48 +216,83 @@ Page({
   onHide: function () {
   },
 
-  /* 点击Now时更新数据 */
-  upd: function () {
-    this.getWeather(this.data.savedCity.lonlat||this.data.lonlat, '')
+  /* 隐藏删除按钮 */
+  hideDelBtn: function () {
+    this.setData({
+      showDelBtn: false
+    })
   },
 
-  /* 显示隐藏更新按钮 */
-  showrefresh: function () {
-    var showrefresh = this.data.showrefresh
-    var loading = this.data.loading
+  /* 显示删除按钮 */
+  showDelBtn: function () {
+    let showDelBtn = this.data.showDelBtn
+    let savedLocation = this.data.savedLocation
+    if ( savedLocation.length === 1 ) return
     this.setData({
-      showrefresh: loading ? false : !showrefresh
+      showDelBtn: !showDelBtn
     })
+  },
+
+  /* 删除天气 */
+  delWeather: function (e) {
+    console.log('del')
+    let cid = e.currentTarget.id
+    let weathers = this.data.weathers
+    let savedLocation = this.data.savedLocation
+    let index = savedLocation.findIndex(item => item.cid === cid)
+    savedLocation.splice(index, 1)
+    weathers.splice(index, 1)
+    if (savedLocation.length === 0) {
+      wx.setStorageSync('forceUpdate', true)
+      this.getLocation()
+    } else {
+      this.setData({
+        weathers: weathers,
+        savedLocation: savedLocation
+      })
+      wx.setStorageSync('weathers', weathers)
+      wx.setStorageSync('savedLocation', savedLocation)
+    }
+    this.hideDelBtn()
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    let weather = this.data.weather
-    let city = 
-      weather.basic.location === weather.basic.parent_city ? 
-      weather.basic.location : 
-      weather.basic.parent_city + ' ' + weather.basic.location
+    let weathers = this.data.weathers
+    let swiperCurrent = this.data.swiperCurrent
+    let title 
+    if (swiperCurrent == weathers.length) {
+      title = '知晴否'
+    } else {
+      let weather = weathers[swiperCurrent]
+      let city = 
+        weather.basic.location === weather.basic.parent_city ? 
+        weather.basic.location : 
+        weather.basic.parent_city + ' ' + weather.basic.location
+      title = city + ' ' + weather.now.cond_txt + ' ' + weather.now.tmp + '°'
+    }
     return {
-      title: city + ' ' + weather.now.cond_txt + ' ' + weather.now.tmp + '°',
+      title: title,
       imageUrl: ''
     }
   },
 
   onPullDownRefresh: function () {
-    this.getWeather(this.data.savedCity.lonlat || this.data.lonlat, '')
+    wx.setStorageSync('forceUpdate', true)
+    this.getWeather(this.data.savedLocation)
     wx.stopPullDownRefresh()    
   },
 
   showDayTmp: function (e) {
-    var that = this
+    let that = this
     that.setData({
       autoplay: false
     })
-    var index = e.currentTarget.dataset.index
-    var dayTmp = that.data.weather.daily_forecast[index]
-    var content = '日升：'+ dayTmp.sr 
+    let index = e.currentTarget.dataset.index
+    let dayTmp = that.data.weather.daily_forecast[index]
+    let content = '日升：'+ dayTmp.sr 
       + '\n' + '日落：' + dayTmp.ss 
       + '\n' + '降水概率：' + dayTmp.pop + '%'
       + '\n' + '相对湿度：' + ' ' + dayTmp.hum + '%'

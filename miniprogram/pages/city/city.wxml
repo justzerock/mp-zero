@@ -14,20 +14,31 @@
     <view class="city-toplist-{{keyword=='' ? 1 : 2}}">
       <view class='locatnow'>
         <view class='locat-txt' style='color:{{primaryColor}};'>当前定位</view>
-        <view class='locat-item now odd' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{currentLonLat.lonlat}}' data-location='{{currentLonLat.city}}' bindtap='weather'>
-          {{currentLonLat.city}}
+        <view class="current-location">          
+          <view class='locat-item now odd' style='color:{{backgroundColor}};background:{{primaryColor}};' data-cid='{{currentLocation.cid}}' data-location='{{currentLocation.location}}' bindtap='weather'>
+            {{currentLocation.location}}
+          </view>
+          <view 
+            class="update-btn {{loadingLocation ? 'loading' : ''}}"
+            style='color:{{primaryColor}}; background:{{backgroundColor}};'
+            bind:tap="getMyLocation"
+          >
+            <view 
+              class="icon-refresh icon">
+            </view>
+          </view>
         </view>
       </view>
-      <view wx:if="{{locatHistory!=''}}" class='locathis'>
+      <view wx:if="{{locationHistory!=''}}" class='locathis'>
         <view class='locat-txt' style='color:{{primaryColor}};'>历史纪录</view>
         <view class='icon-del clear-his' bindtap='clearHis' style='color:{{primaryColor}};'></view>
         <view class='locat-card his'>
-          <block wx:for='{{locatHistory}}' wx:for-item="hisItem" wx:for-index="idx" wx:key="unique">
-            <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{hisItem.lonlat}}' data-location='{{hisItem.city}}' bindtap='weather'>
-              {{hisItem.city}}
+          <block wx:for='{{locationHistory}}' wx:for-item="locationItem" wx:for-index="idx" wx:key="unique">
+            <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-cid='{{locationItem.cid}}' data-location='{{locationItem.location}}' bindtap='weather'>
+              {{locationItem.location}}
             </view>
-            <view wx:else class='locat-item top' style='color:{{primaryColor}};background:{{backgroundColor}};' data-lon-lat='{{hisItem.lonlat}}' data-location='{{hisItem.city}}' bindtap='weather'>
-              {{hisItem.city}}
+            <view wx:else class='locat-item top' style='color:{{primaryColor}};background:{{backgroundColor}};' data-cid='{{locationItem.cid}}' data-location='{{locationItem.location}}' bindtap='weather'>
+              {{locationItem.location}}
             </view>
           </block>
         </view>
@@ -35,34 +46,34 @@
       <view class='locattop'>
         <view class='locat-txt' style='color:{{primaryColor}};'>热门城市</view>
         <view class='locat-card'>
-          <block wx:for='{{cityTop}}' wx:for-item="topItem" wx:for-index="idx" wx:key="unique">
-            <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-lon-lat='{{topItem.lon+","+topItem.lat}}' data-location='{{topItem.location}}' bindtap='weather'>
-              {{topItem.location}}
+          <block wx:for='{{locationTop}}' wx:for-item="locationItem" wx:for-index="idx" wx:key="unique">
+            <view wx:if='{{idx%2==0}}' class='locat-item top' style='color:{{backgroundColor}};background:{{primaryColor}};' data-cid='{{locationItem.cid}}' data-location='{{locationItem.location}}' bindtap='weather'>
+              {{locationItem.location}}
             </view>
-            <view wx:else class='locat-item top' style='color:{{primaryColor}};background:{{backgroundColor}};' data-lon-lat='{{topItem.lon+","+topItem.lat}}' data-location='{{topItem.location}}' bindtap='weather'>
-              {{topItem.location}}
+            <view wx:else class='locat-item top' style='color:{{primaryColor}};background:{{backgroundColor}};' data-cid='{{locationItem.cid}}' data-location='{{locationItem.location}}' bindtap='weather'>
+              {{locationItem.location}}
             </view>
           </block>
         </view>
       </view>
     </view>
     <view>
-      <block wx:for="{{citylist}}" wx:for-item="cityItem" wx:key="unique">
-        <view class='citylist-item' style='color:{{primaryColor}};background:{{backgroundColor}};' data-lon-lat='{{cityItem.lon+","+cityItem.lat}}' data-location='{{cityItem.location}}' bindtap='weather'>
-          <view class='key{{mod.indexOf(keyword,cityItem.admin_area)==-1?0:1}}'>
-            {{cityItem.admin_area}}
+      <block wx:for="{{locationList}}" wx:for-item="locationItem" wx:key="unique">
+        <view class='locationList-item' style='color:{{primaryColor}};background:{{backgroundColor}};' data-cid='{{locationItem.cid}}' data-location='{{locationItem.location}}' bindtap='weather'>
+          <view class='key{{mod.indexOf(keyword,locationItem.admin_area)==-1?0:1}}'>
+            {{locationItem.admin_area}}
           </view>
           ，
-          <view class='key{{mod.indexOf(keyword,cityItem.parent_city)==-1?0:1}}'>
-            {{cityItem.parent_city}}
+          <view class='key{{mod.indexOf(keyword,locationItem.parent_city)==-1?0:1}}'>
+            {{locationItem.parent_city}}
           </view>
           ，
-          <view class='key{{mod.indexOf(keyword,cityItem.location)==-1?0:1}}'>
-            {{cityItem.location}}
+          <view class='key{{mod.indexOf(keyword,locationItem.location)==-1?0:1}}'>
+            {{locationItem.location}}
           </view>
         </view>
       </block>
-      <view wx:if="{{cityTip!=''}}" class='citylist-item' style='color:{{primaryColor}};background:{{backgroundColor}};'>
+      <view wx:if="{{cityTip!=''}}" class='locationList-item' style='color:{{primaryColor}};background:{{backgroundColor}};'>
         {{cityTip}}
       </view>
     </view>

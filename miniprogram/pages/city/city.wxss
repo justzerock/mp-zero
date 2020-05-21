@@ -1,3 +1,7 @@
+.content {
+  height: 100%;
+}
+
 .search-bar {
   display: flex;
   flex-direction: row;
@@ -136,7 +140,7 @@
   float: right;
 }
 
-.citylist-item {
+.locationList-item {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
@@ -148,10 +152,53 @@
   /* color: #3C5F81;  */
 }
 
-.citylist-item>view {
+.locationList-item>view {
   display: inline-block;
 }
 
-.citylist-item .key1 {
+.locationList-item .key1 {
   color: #4DABF7;
+}
+
+/* 当前定位 */
+.current-location {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.current-location .locat-item {
+  flex-grow: initial;
+}
+.update-btn {
+  font-size: 40rpx;
+  margin: 10rpx 20rpx;
+  height: 60rpx;
+  width: 60rpx;
+  border: none;
+  border-radius: 30rpx;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transition: all .25s ease-in-out;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.update-btn:active {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.08);
+  transform: scale(0.99);
+}
+
+.update-btn.loading .icon {
+  animation: loading 1s infinite linear;
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 }

@@ -1,44 +1,45 @@
 <view class='container'>
-  <view class='tc-colors'>
-    <block wx:for='{{tcColors}}' wx:for-item='serial' wx:for-index="sid" wx:key='sid'>
-      <view id="s-{{sid}}" class='serial {{dispTi[sid]}}' data-sid='{{sid}}' bindtap='itemToggle' animation='{{anim}}' style='color:{{serial.fcolor}};background:{{serial.color}}; transform:translateY({{colorHei*sid}}px); height:{{colorHei}}px;'>
-        {{serial.key}}
-        <view class='icon-up co-btn {{dispArr[sid] ? "fa-down" : "fa-up" }}'></view>
+  <view class='theme-colors'>
+    <block 
+      wx:for='{{themeColors}}' 
+      wx:for-item='tab' 
+      wx:for-index="tid" 
+      wx:key='tid'
+    >
+      <view 
+        id="{{tid}}" 
+        class='tab-name {{tidx == tid ? "current" : ""}}' 
+        style='background: {{tab.fcolor}}; color: {{tab.color}}; border-color: {{tidx == tid ? tab.color : tab.fcolor}}'
+        bind:tap="onClickTab"
+      >
+        {{tab.key}}
       </view>
-      <view id='s-color-{{sid}}' class="s-color" style='display:{{dispArr[sid] ? "block" : "none" }}; padding-top: {{colorHei}}px;'>
-        <block wx:for='{{serial.colors}}' wx:for-item='color' wx:for-index="cid" wx:key='cid'>
-          <view class='color-item {{state==cid ? "selected" : "" }}'>
-            <view class="colors" data-index='{{cid}}' bindtap='showAction' style='color:{{color.fvalue}};background:{{color.value}};'>
-              <view class='value'>{{color.value}}</view>
-              <view class='name'>{{color.name}}</view>
-            </view>
-            <view 
-              class='action {{state==cid ? "selected" : "" }}' 
-              style="color:{{color.value}}; background:{{color.fvalue}};"
-            >
-              <view 
-                class="set-item" 
-                hover-class="set-item-hover" 
-                data-color-value="{{color.name+','+color.value+','+color.fvalue}}" 
-                bindtap='setColors'
-              >
-                <radio-group class="set-icon">
-                  <radio class="set-radio" checked="{{primaryColor === color.value ? true : false}}" />
-                </radio-group>
-                <view class="set-title">选此配色</view>
-              </view>
-              <view 
-                class="set-item" 
-                hover-class="set-item-hover" 
-                data-the-color='{{color.value}}' 
-                bindtap='copyColor'
-              >
-                <view class="icon-copy set-icon"></view>
-                <view class="set-title">复制颜色</view>
-              </view>
-            </view>
-          </view>
-        </block>
+    </block>
+  </view>
+  <view class="current-colors">
+    <block 
+      wx:for="{{currentColors}}"
+      wx:for-item="color"
+      wx:for-index="cid"
+      wx:key="cid"
+    >
+      <view 
+        class="current-item {{cidx === cid+color.value ? 'current' : ''}}"
+        style='background: {{color.value}}; color: {{color.fvalue}};}}'
+        id="{{cid+color.value}}"
+        bind:tap="onClickColorItem"
+      >
+        {{color.name}}
+        <view 
+          class="color-btn {{primaryColor === color.value ? 'current' : ''}}" 
+          hover-stop-propagation="{{true}}"
+          style='background: {{color.fvalue}};'
+          data-primary-color='{{color.value}}'
+          data-background-color='{{color.fvalue}}'
+          data-primary-name='{{color.name}}'
+          catchtap="onClickColorBtn"
+        >
+        </view>
       </view>
     </block>
   </view>

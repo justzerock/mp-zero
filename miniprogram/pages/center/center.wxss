@@ -4,23 +4,9 @@
   position: relative;
 }
 
-.back-top {
-  display: flex;
-  width: 100%;
-  height: 100rpx;
-  justify-content: center;
-  align-items: center;
-  /* background: #549688; */
-  transition: all .3s;
-}
-
-.blur {
-  filter: blur(10px);
-}
-
 .userinfo {
-  position: absolute;
-  top: 20rpx;
+  position: relative;
+  margin: 40rpx auto;
   width: 90%;
   height: 160rpx;
   border-radius: 20rpx;
@@ -88,7 +74,7 @@
 
 .progress {
   display: flex;
-  margin: 110rpx auto 40rpx;
+  margin: 40rpx auto;
   height: 160rpx;
   width: 90%;
   /* background: #35d0ba; */
@@ -96,7 +82,7 @@
   justify-content: flex-start;
   box-shadow: 0 2px 3px rgba(0, 0, 0, .08);
   transition: all .2s;
-  opacity: 0.85;
+  opacity: 0.95;
 }
 
 .progress:active {
@@ -156,7 +142,7 @@
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  opacity: 0.85;
+  opacity: 0.95;
 }
 
 .setting-item {

@@ -1,8 +1,8 @@
-var app = getApp()
-var config = require('../../libs/config.js')
-var colors = config.colors
-var db = wx.cloud.database()
-var dbLike = db.collection('user-like')
+const app = getApp()
+const db = wx.cloud.database()
+const dbLike = db.collection('user-like')
+const config = require('../../libs/config.js');
+const avatarUrl = config.avatar.link;
 
 Page({
 
@@ -11,8 +11,8 @@ Page({
    */
   data: {
     userInfo:{
-      avatarUrl:'../../img/avatar.png',
-      nickName: '👈 点击头像',
+      avatarUrl: avatarUrl,
+      nickName: '👈 知晴否',
     },
     logged: false,
     settingItems: [
@@ -45,9 +45,9 @@ Page({
     passed: '0%',
     passedText: '',
     leftText: '',
-    primaryColor: '#426666',
-    backgroundColor: '#f6f7f7',
-    colorName: '黛绿',
+    primaryColor: '#549688',
+    backgroundColor: '#f6faf9',
+    colorName: '铜绿',
     usedSize: 0,
     likeCount: 0,
     like: false,
@@ -60,8 +60,9 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {    
-    var that = this
+  onLoad: function () { 
+    wx.hideTabBar()
+    let that = this
     that.setColors()
     that.setSettingDetail()
     that.getLikeCount()
@@ -91,7 +92,7 @@ Page({
 
   // 从storage读取
   getUserInfo: function () {
-    var that = this
+    let that = this
     wx.getStorage({
       key: 'logged',
       success (res) {
@@ -114,9 +115,9 @@ Page({
 
   /* 设置主题色 */
   setColors: function () {
-    var primaryColor = app.color.primaryColor
-    var backgroundColor = app.color.backgroundColor
-    var primaryName = app.color.primaryName
+    let primaryColor = app.color.primaryColor
+    let backgroundColor = app.color.backgroundColor
+    let primaryName = app.color.primaryName
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
@@ -129,15 +130,11 @@ Page({
       backgroundColor: primaryColor,
     })
 
-    wx.setTabBarStyle({
-      selectedColor: primaryColor,
-      backgroundColor: backgroundColor
-    })
   },
 
   /* 获取点赞数量 */
   getLikeCount: function () {
-    var that = this
+    let that = this
     dbLike.where({
       like: true
     }).count().then(res => {
@@ -166,10 +163,10 @@ Page({
 
   /* 点击设置项目 */
   setItemLike: function () {
-    var that = this
-    var like = that.data.like
-    var likeCount = that.data.likeCount
-    var likeData = that.data.likeData
+    let that = this
+    let like = that.data.like
+    let likeCount = that.data.likeCount
+    let likeData = that.data.likeData
     like = !like
     if (like && likeData.length == 0) {
       dbLike.add({
@@ -212,10 +209,10 @@ Page({
 
   /* 点击设置项目 */
   setItemClean: function () {
-    var that = this
+    let that = this
     wx.showModal({
       title: '确定清空？',
-      content: '此操作将会删除天气、词典、百科等搜索历史，以及恢复默认配色',
+      content: '此操作将会删除天气及搜索历史，以及恢复默认配色',
       success(res) {
         if (res.confirm) {
           wx.clearStorage()
@@ -235,10 +232,10 @@ Page({
 
   /* 设置年进度 */
   setYearPassed: function () {
-    var that = this
-    var passed = app.getProgress()
-    var passedText = ''
-    var leftText = ''
+    let that = this
+    let passed = app.getProgress()
+    let passedText = ''
+    let leftText = ''
     if (passed < 50) {
       leftText = '本年度已过去 ' + passed + '%'
     } else {
@@ -253,15 +250,15 @@ Page({
   },
 
   showWords: function () {
-    var that = this
-    var words = that.data.words
+    let that = this
+    let words = that.data.words
     if (words) {
       that.setYearPassed()
     } else {
-      //var passed = app.getProgress()
-      var passed = app.setDaynight()
-      var passedText = ''
-      var leftText = ''
+      //let passed = app.getProgress()
+      let passed = app.setDaynight()
+      let passedText = ''
+      let leftText = ''
       if (passed < 35) {
         passedText = ''
         leftText = '逝者如斯夫，不舍昼夜'
@@ -283,7 +280,7 @@ Page({
 
   /* 设置菜单详情 */
   setSettingDetail: function () {
-    var that = this
+    let that = this
     wx.getStorageInfo({
       success (res) {
         that.setData({
@@ -307,9 +304,12 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    var that = this
+    wx.hideTabBar()
+    let that = this
     that.setColors()
     that.setSettingDetail()
+    let words = that.data.words
+    if (words) return
     this.setData({
       passed: app.getProgress() + '%'
     })
@@ -319,6 +319,8 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+    let words = this.data.words
+    if (words) return
     this.setData({
       passed: app.getProgress()/2 + '%'
     })

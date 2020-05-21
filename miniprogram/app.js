@@ -1,20 +1,24 @@
 //app.js
 App({
   color: {
-    primaryColor: '#426666',
-    backgroundColor: '#f6f7f7',
-    primaryName: '黛绿'
+    primaryColor: '#549688',
+    backgroundColor: '#f6faf9',
+    primaryName: '铜绿'
   },
   globalData: {
     openid: ''
   },
+  /* promisify */
+  request: promisify(wx.request),
+  getLocation: promisify(wx.getLocation),
+
   onLaunch: function () {
-    /* wx.hideTabBar() */
+    wx.hideTabBar()
     var that = this
     that.color = wx.getStorageSync('colorSet') || {
-      primaryColor: '#426666',
-      backgroundColor: '#f6f7f7',
-      primaryName: '黛绿'
+      primaryColor: '#549688',
+      backgroundColor: '#f6faf9',
+      primaryName: '铜绿'
     }
     
     wx.cloud.init({
@@ -33,7 +37,7 @@ App({
   },
 
   onShow: function () {
-    /* wx.hideTabBar() */
+    wx.hideTabBar()
   },
 
   getProgress: function () {
@@ -49,8 +53,7 @@ App({
   },
 
   setDaynight:function () {
-    var srss = wx.getStorageSync('weatherData').daily_forecast[0] || { sr: '06:00', ss: '18:00' }
-    var date = new Date()
+    var srss = wx.getStorageSync('weathers')[0].daily_forecast[0] || { sr: '06:00', ss: '18:00' }
     var dayStart = new Date('2018/01/01 00:00')
     var dayEnd = new Date('2018/01/01 23:59')
     var daySr = new Date('2018/01/01 '+ srss.sr)
@@ -81,3 +84,16 @@ App({
   },
 
 })
+
+/*
+ * author: 老张
+ * title: 将小程序原生异步函数promisify后，在async/await中使用
+ * link: https://developers.weixin.qq.com/community/develop/article/doc/00028cbc2e04e0ddf549d535351c13
+ */
+function promisify(api) {
+  return (opt, ...arg) => {
+    return new Promise((resolve, reject) => {
+      api(Object.assign({}, opt, { success: resolve, fail: reject }), ...arg)
+    })
+  }
+}

@@ -1,6 +1,6 @@
-var config = require('../../libs/config.js');
-var colors = config.colors;
-var app = getApp()
+const config = require('../../libs/config.js');
+const colors = config.colors;
+const app = getApp()
 
 Page({
 
@@ -8,141 +8,68 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tcColors: '',
-    showTi: false,
-    dispArr: [],
-    dispTi: [],
-    anim: {},
-    state: -1,
-    primaryName: '黛绿',
-    primaryColor: '#426666',
-    backgroundColor: '#f6f7f7',
-    colorHei: 0,
+    themeColors: colors,
+    primaryColor: app.color.primaryColor,
+    backgroundColor: app.color.backgroundColor,
+    currentColors: colors[0].colors,
+    tidx: 0,
+    cidx: ''
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    var that = this
-    var arr = []
-    var ti = []
-    for (let i in colors) {
-      arr.push(false)
-      ti.push('show')
+  onLoad: function () {
+  },
+
+  /* 点击标签 */
+  onClickTab: function (e) {
+    let id = e.currentTarget.id
+    this.setData({
+      tidx: id,
+      currentColors: colors[id].colors
+    })
+  },
+
+  /* 点击颜色项 */
+  onClickColorItem: function (e) {
+    let id = e.currentTarget.id
+    let current = this.data.cidx
+    if (current === '' || current !== id) {
+      current = id
+    } else {
+      current = ''
     }
-    that.getPosition(arr)
-    that.setData({
-      tcColors: colors,
-      dispArr: arr,
-      dispTi: ti,
-      primaryColor: app.color.primaryColor,
-      backgroundColor: app.color.backgroundColor,
-      primaryName: app.color.primaryName
+    this.setData({
+      cidx: current
     })
   },
 
-  getPosition: function (arr) {
-    var that = this
-    var devHei = 0
-    var colorHei = 0
-    wx.getSystemInfo({
-      success: (res) => {
-        devHei = res.windowHeight
-      }
-    });
-    colorHei = devHei / arr.length
-    /* colorHei = platform == 'ios' ?
-      (devHei - 50) / arr.length :
-      devHei / arr.length */
-    that.setData({
-      colorHei: colorHei
-    })
+  /* 设置主题色 */
+  onClickColorBtn: function (e) {
+    let primaryColor = e.currentTarget.dataset.primaryColor
+    let primaryName = e.currentTarget.dataset.primaryName
+    let backgroundColor = e.currentTarget.dataset.backgroundColor
+    this.toSet(primaryColor, primaryName, backgroundColor)
   },
 
-  copyColor: function (e) {
-    var that = this
-    var value = e.currentTarget.dataset.theColor
-    wx.setClipboardData({
-      data: value,
-      success: function () {
-        wx.showToast({
-          title: '复制：' + value
-        })
-      }
-    })
-  },
-
-  setColors: function (e) {
-    var that = this
-    var colorArr = e.currentTarget.dataset.colorValue.split(',')
-    var primaryName = that.data.primaryName
-    if (primaryName === colorArr[0]) return
-    var primaryColor = ''
-    var backgroundColor = ''
-    primaryColor = colorArr[1]
-    backgroundColor = colorArr[2]
-    that.toSet(primaryColor, backgroundColor, colorArr[0])
-    that.setData({
-      primaryName: colorArr[0],
-    })
-  },
-
-  toSet: function (primaryColor, backgroundColor, primaryName) {
-    wx.setStorage({
-      key: 'colorSet',
-      data: {
-        primaryColor: primaryColor,
-        backgroundColor: backgroundColor,
-        primaryName: primaryName
-      }
-    })
-    app.color.primaryColor = primaryColor
-    app.color.backgroundColor = backgroundColor
-    app.color.primaryName = primaryName
+  /* 设置主题色 */
+  toSet: function (primaryColor, primaryName, backgroundColor) {
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor
     })
-  },
-
-  showAction: function (e) {
-    var that = this
-    var state = that.data.state
-    var index = e.currentTarget.dataset.index
-    state = state == index ? -1 : index
-    that.setData({
-      state: state
-    })
-  },
-
-  itemToggle: function (e) {
-    var that = this
-    var sid = e.currentTarget.dataset.sid
-    var dispArr = that.data.dispArr
-    var dispTi = that.data.dispTi
-    dispArr[sid] = !dispArr[sid]
-    for (let i in dispTi) {
-      if (i == sid) {
-        dispTi[i] = dispArr[sid] ? 'fixed' : 'show'
-      } else {
-        dispTi[i] = dispArr[sid] ? 'hidden' : 'show'
+    app.color.primaryColor = primaryColor
+    app.color.backgroundColor = backgroundColor
+    app.color.primaryName = primaryName
+    wx.setStorage({
+      key: 'colorSet',
+      data: {
+        primaryName,
+        primaryColor,
+        backgroundColor
       }
-    }
-    that.setData({
-      dispArr: dispArr,
-      dispTi: dispTi,
-      state: -1
     })
-    var color = dispArr[sid] ? that.data.tcColors[sid].color : that.data.tcColors[0].color
-    var time = dispArr[sid] ? 300 : 0
-    setTimeout(function () {
-      wx.setNavigationBarColor({
-        frontColor: '#ffffff',
-        backgroundColor: color
-      })
-    }, time)
-
   },
 
   /**

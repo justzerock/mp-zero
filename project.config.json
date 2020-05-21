@@ -8,7 +8,9 @@
 	"setting": {
 		"urlCheck": true,
 		"es6": false,
+		"enhance": true,
 		"postcss": true,
+		"preloadBackgroundData": false,
 		"minified": true,
 		"newFeature": true,
 		"coverView": true,
@@ -28,7 +30,7 @@
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.2.5",
+	"libVersion": "2.11.0",
 	"appid": "wx9dccbe7133ea346c",
 	"projectname": "%E7%9F%A5%E6%99%B4%E5%90%A6",
 	"isGameTourist": false,

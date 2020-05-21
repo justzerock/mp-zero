@@ -1,27 +1,14 @@
 <view class='container'>
   <view class='content' style='background:linear-gradient({{primaryColor}}, 40%, {{backgroundColor}});'>
   <view class='center-view'>
-    <view class="back-top">
-        <!-- <button 
-          open-type="getUserInfo" 
-          bindgetuserinfo="onGetUserInfo"
-          class="userinfo"
-          style="background:{{backgroundColor}};"
-          
-        >
-          <view class='userinfo-avatar' style="background-image: url({{userInfo.avatarUrl}})">
-          </view>
-          <view class='userinfo-nickname' style="color:{{primaryColor}};">{{userInfo.nickName}}</view>
-        </button> -->
-      <view class='userinfo'>
-        <button 
-          open-type="getUserInfo" 
-          bindgetuserinfo="onGetUserInfo"
-          class="userinfo-avatar"
-          style="background-image: url({{userInfo.avatarUrl}})"
-        ></button>
-        <view class='userinfo-nickname' style="color:{{primaryColor}};">{{userInfo.nickName}}</view>
-      </view>
+    <view class='userinfo'>
+      <button 
+        open-type="getUserInfo" 
+        bindgetuserinfo="onGetUserInfo"
+        class="userinfo-avatar"
+        style="background-image: url({{userInfo.avatarUrl}})"
+      ></button>
+      <view class='userinfo-nickname' style="color:{{primaryColor}};">{{userInfo.nickName}}</view>
     </view>
     <view class='progress'    
       style="background:{{primaryColor}};"
@@ -68,5 +55,5 @@
     </view>
     </view>
   </view>
-    <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}"></tabbar>
+  <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}"></tabbar>
 </view>

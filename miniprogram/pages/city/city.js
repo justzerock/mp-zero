@@ -1,34 +1,38 @@
-var config = require('../../libs/config.js');
-var key = config.heweather.key;
-var app = getApp()
+const config = require('../../libs/config.js');
+const key = config.heweather.key;
+const app = getApp()
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    currentLonLat: {
-      lonlat: '',
-      city: '定位中……'
+    currentLocation: {
+      cid: '',
+      location: '定位中……'
     },  //  当前定位坐标城市
-    cityTop: '', //  热门城市数据
+    locationTop: '', //  热门城市数据
     keyword: '', //  搜索关键词
-    citylist: '',  //  搜索关联城市
+    locationList: '',  //  搜索关联城市
     cityTip: '', //  搜索提示
-    locatHistory: '',  //  历史城市数据
+    locationHistory: '',  //  历史城市数据
     clearIcon: '', //  清除文字图标
     focus: '',  //  聚焦状态
     loading: false, //  加载动画
     primaryColor: '',
-    backgroundColor: ''
+    backgroundColor: '',
+    originCid: '',
+    loadingLocation: false
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (option) {
-    var that = this
-    console.log(option)
+    let that = this
+    that.setData({
+      originCid: option.id
+    })
     that.setColors()
     //判断是否获得了用户地理位置授权
     wx.getSetting({
@@ -37,32 +41,32 @@ Page({
           that.openConfirm()
       }
     })
-    that.getMyLocation()
+    that.getCurrentLocation()
     //  获取已缓存的热门城市
     wx.getStorage({
-      key: 'cityTop',
+      key: 'locationTop',
       success: function (res) {
         that.setData({
-          cityTop: res.data
+          locationTop: res.data
         })
       },
       fail: function () {
         //  否则获取网络的城市列表并缓存
-        that.getCityTop()
+        that.getLocationTop()
       }
     })
     //  获取搜索历史
-    that.getCityData()
+    that.getLocationData()
   },
 
   onShow: function () {
-    this.getMyLocation()
+    //this.getMyLocation()
   },
 
   /* 设置主题色 */
   setColors: function () {
-    var primaryColor = app.color.primaryColor
-    var backgroundColor = app.color.backgroundColor
+    let primaryColor = app.color.primaryColor
+    let backgroundColor = app.color.backgroundColor
     this.setData({
       primaryColor: primaryColor,
       backgroundColor: backgroundColor
@@ -73,154 +77,106 @@ Page({
       backgroundColor: primaryColor,
     })
 
-    wx.setTabBarStyle({
-      selectedColor: primaryColor,
-      backgroundColor: backgroundColor
-    })
+  },
+
+  /* 获取缓存的当前位置 */
+  getCurrentLocation: function () {
+    let currentLocation = wx.getStorageSync('currentLocation') || {}
+    if (currentLocation === {}) {
+      this.getMyLocation()
+    } else {
+      this.setData({
+        currentLocation: currentLocation
+      })
+    }
   },
 
   /* 获取当前定位 */
-  getMyLocation: function () {
-    var that = this
-    var currentLonLat = wx.getStorageSync('currentLonLat') || ''
-    wx.getLocation({
-      type: 'wgs84',
-      success: function (gps) {
-        var lonlat = gps.longitude + ',' + gps.latitude
-        if (currentLonLat != '') {
-          if (currentLonLat.lonlat == lonlat) {
-            that.setData({
-              currentLonLat: currentLonLat
-            })
-            return
-          }
-        }
-        wx.request({
-          url: 'https://search.heweather.com/find?',
-          data: {
-            key: key,
-            location: lonlat
-          },
-          header: {
-            'content-type': 'application/json'
-          },
-          success: function (res) {
-            if (res.data.HeWeather6[0].status == 'ok') {
-              var city = res.data.HeWeather6[0].basic[0].location
-              that.setData({
-                currentLonLat: {
-                  lonlat: lonlat,
-                  city: city
-                }
-              })
-              wx.setStorage({
-                key: 'currentLonLat',
-                data: {
-                  lonlat: lonlat,
-                  city: city
-                }
-              })
-            } else {
-              that.setData({
-                currentLonLat: {
-                  lonlat: lonlat,
-                  city: '无法定位'
-                }
-              })
-            }
-          },
-          fail: function () {
-            that.setData({
-              currentLonLat: {
-                lonlat: lonlat,
-                city: '稍后重试'
-              }
-            })
-          }
-        })
-      }
+  getMyLocation: async function () {
+    let that = this
+    that.setData({
+      loadingLocation: true
+    })
+    let lonlatData = await app.getLocation({type: 'wgs84'})
+    let locationData = await app.request({
+      url: 'https://search.heweather.com/find?',
+      data: {
+        key: key,
+        location: lonlatData.longitude + ',' + lonlatData.latitude
+      },
+      header: {
+        'content-type': 'application/json'
+      },
+    })
+    that.setData({
+      currentLocation: locationData.data.HeWeather6[0].basic[0]
+    })
+    that.setData({
+      loadingLocation: false
     })
   },
 
   /* 缓存搜索的数据，6条 */
-  setCityData: function (obj) {
-    var that = this
-    try {
-      var citydata = wx.getStorageSync('locatHistory')
-      if (citydata != '') {
-        var flags = true
-        //  检查城市名是否已缓存
-        for (let i in citydata) {
-          if (citydata[i].city == obj.city) {
-            flags = false
-          }
-        }
-        if (flags) {
-          citydata.push(obj)
-          //  数据超过6条，删除第一条
-          if (citydata.length > 6) {
-            citydata.splice(0, 1)
-          }
-        }
-        try {
-          wx.setStorageSync('locatHistory', citydata)
-        } catch (e) {
-        }
-      } else {
-        citydata.push(obj)
-        try {
-          wx.setStorageSync('locatHistory', citydata)
-        } catch (e) {
+  setLocationData: function ({cid, location}) {
+    let that = this
+    let originCid = that.data.originCid
+    let locationHistory = wx.getStorageSync('locationHistory') || []
+    if (locationHistory !== []) {
+
+      let locationIndex = locationHistory.findIndex(item => item.cid === cid)
+
+      if (locationIndex === -1) {
+        locationHistory.push({cid, location})
+        if (locationHistory.length > 6) {
+          locationHistory.splice(0, 1)
         }
       }
-    } catch (e) {
-      var citydata = []
-      citydata.push(obj)
-      try {
-        wx.setStorageSync('locatHistory', citydata)
-      } catch (e) {
-      }
+    } else {
+      locationHistory.push({cid, location})
     }
-    try {
-      wx.setStorageSync('savedCity', obj)
-    } catch (e) {
+    wx.setStorageSync('locationHistory', locationHistory)
+
+    let savedLocation = wx.getStorageSync('savedLocation') || []
+    if ( originCid !== 'new' ) {
+      let locationIndex = savedLocation.findIndex(item => item.cid === originCid)
+      savedLocation[locationIndex] = {cid, location}
+    } else {
+      savedLocation.push({cid, location})
     }
-    wx.navigateBack({
-    })
+    wx.setStorageSync('savedLocation', savedLocation)
+    wx.setStorageSync('forceUpdate', true)
+    wx.navigateBack({})
   },
 
   /* 获取搜索过的城市缓存 */
-  getCityData: function () {
-    var that = this
-    try {
-      var citydata = wx.getStorageSync("locatHistory")
-      if (citydata != '') {
-        that.setData({
-          locatHistory: citydata
-        })
-      }
-    } catch (e) {
+  getLocationData: function () {
+    let that = this
+    let locationHistory = wx.getStorageSync("locationHistory") || []
+    if (locationHistory !== []) {
+      that.setData({
+        locationHistory: locationHistory
+      })
     }
   },
 
   focus: function () {
-    var that = this
+    let that = this
     that.setData({
       focus: "focus"
     })
   },
 
   blur: function () {
-    var that = this
+    let that = this
     that.setData({
       focus: ""
     })
   },
 
   /* 获取热门城市，中国，15个 */
-  getCityTop: function () {
-    var that = this
-    wx.request({
+  getLocationTop: async function () {
+    let that = this
+    let locationTopData = await app.request({
       url: 'https://search.heweather.com/top?',
       data: {
         group: 'cn',
@@ -229,27 +185,26 @@ Page({
       },
       header: {
         'content-type': 'application/json'
-      },
-      success: function (res) {
-        that.setData({
-          cityTop: res.data.HeWeather6[0].basic
-        })
-        wx.setStorage({
-          key: 'cityTop',
-          data: res.data.HeWeather6[0].basic,
-        })
       }
+    })
+    let locationTop = locationTopData.data.HeWeather6[0].basic
+    that.setData({
+      locationTop: locationTop
+    })
+    wx.setStorage({
+      data: locationTop,
+      key: 'locationTop',
     })
   },
 
   /* 清空历史缓存 */
   clearHis: function () {
-    var that = this
+    let that = this
     wx.removeStorage({
-      key: 'locatHistory',
+      key: 'locationHistory',
       success: function (res) {
         that.setData({
-          locatHistory: ''
+          locationHistory: ''
         })
       },
     })
@@ -257,17 +212,16 @@ Page({
 
   /* 搜索天气 */
   weather: function (e) {
-    var that = this
-    var city = e.currentTarget.dataset.location
-    var lonlat = e.currentTarget.dataset.lonLat
-    if (lonlat == '') return
-    var citydata = { 'city': city, 'lonlat': lonlat }
+    let that = this
+    let cid = e.currentTarget.dataset.cid
+    let location = e.currentTarget.dataset.location
+    if (cid == '') return
     //  存储搜索的城市数据
-    that.setCityData(citydata)
+    that.setLocationData({cid, location})
   },
 
   openConfirm: function () {
-    var that = this
+    let that = this
     wx.showModal({
       content: '检测到您没打开小程序的定位权限，是否去设置打开？',
       confirmText: "确认",
@@ -285,29 +239,29 @@ Page({
 
   /* 按键盘确认键直接搜索第一个城市 */
   getFirst: function () {
-    var that = this
-    var keyword = that.data.keyword
-    var citylist = that.data.citylist
-    var firstcity = ''
-    if (citylist != '' && citylist.length > 0) {
-      firstcity = citylist[0]
+    let that = this
+    let keyword = that.data.keyword
+    let locationList = that.data.locationList
+    let firstcity = ''
+    if (locationList != '' && locationList.length > 0) {
+      firstcity = locationList[0]
     }
     if (keyword == '' || firstcity == '') return
     firstcity = {
-      'city': firstcity.location,
-      'lonlat': firstcity.lon + ',' + firstcity.lat
+      'location': firstcity.location,
+      'cid': firstcity.cid
     }
     // 存储城市数据
-    that.setCityData(firstcity)
+    that.setLocationData(firstcity)
   },
 
   /* 清空关键词 */
   clearkeyword: function () {
-    var that = this
+    let that = this
     that.setData({
       keyword: '',
       clearIcon: '',
-      citylist: '',
+      locationList: '',
       cityTip: '',
       loading: false
     })
@@ -315,7 +269,7 @@ Page({
 
   /* 检测输入框变化 */
   inputkeyword: function (e) {
-    var that = this
+    let that = this
     that.setData({
       keyword: e.detail.value.trim()
     })
@@ -323,7 +277,7 @@ Page({
       that.setData({
         clearIcon: '',
         loading: false,
-        citylist: ''
+        locationList: ''
       })
     } else {
       that.setData({
@@ -345,19 +299,19 @@ Page({
         success: function (res) {
           if (res.data.HeWeather6[0].status == 'ok') {
             that.setData({
-              citylist: res.data.HeWeather6[0].basic,
+              locationList: res.data.HeWeather6[0].basic,
               cityTip: ''
             })
           } else {
             that.setData({
-              citylist: '',
+              locationList: [],
               cityTip: '未找到相关城市'
             })
           }
         },
         fail: function () {
           that.setData({
-            citylist: '',
+            locationList: [],
             cityTip: '大概是网络故障'
           })
         }
@@ -367,7 +321,7 @@ Page({
 
   onShareAppMessage: function () {
     return {
-      title: '我在' + this.data.currentLonLat.city + '(可能不太准)',
+      title: '我在' + this.data.currentLocation.location + '(可能不太准)',
       imageUrl: ''
     }
   }
