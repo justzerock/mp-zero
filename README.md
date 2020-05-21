@@ -1,6 +1,8 @@
 # 知晴否
 
-![知晴否](https://cdn.jsdelivr.net/gh/justzerock/mp-zero@master/miniprogram/img/avatar.png)
+<img src="https://cdn.jsdelivr.net/gh/justzerock/assets@master/img/gh_37648e1c90e0_430.jpg" alt="知晴否" width='200' />
+
+
 
 <font size=5>如</font>你所见，这是个天气小程序
 
