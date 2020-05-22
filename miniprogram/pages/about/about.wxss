@@ -45,12 +45,10 @@
   align-items: center;
   position: relative;
   width: 100%;
-  height: 2em;
+  height: 100rpx;
   background: #24BFA5;
   border-radius: 5px;
-  line-height: 1.5em;
   color: #fff;
-  padding: 2px 4px;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
 }
 .block .left {
@@ -58,21 +56,36 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 60%;
   height: 100%;
   border-radius: 5px;
   color: #24BFA5;
   background: #fff;
   justify-content: center;
   align-items: center;
+  transition: all .25s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .block .right {
   display: flex;
   position: absolute;
-  width: 40%;
   height: 100%;
   right: 0;
   top: 0;
   justify-content: center;
   align-items: center;
+  transition: all .25s ease-in-out;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.middle-icon {
+  display: flex;
+  align-self: center;
+  justify-self: center;
+  color:#24BFA5;
+  justify-content: center;
+  align-items: center;
+  margin: 40rpx auto;
+  font-size: 40rpx;
 }

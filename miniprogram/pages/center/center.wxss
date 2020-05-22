@@ -95,7 +95,7 @@
   transform: scale(1.1);
 }
 
-.passed, .left {
+.left, .right {
   display: flex;
   height: 100%;
   justify-content: center;
@@ -106,13 +106,11 @@
   transition: all ease 2s;
   will-change: transition;
 }
-.passed {
-  /* color: #35D0BA;
-  background: #F5F9F8; */
+.left {
   border-radius: 20rpx;
 }
 
-.passed-text.percent, .left-text.percent {
+.left-text.percent, .right-text.percent {
   animation: percent 1s ease;  
 }
 @keyframes percent {
@@ -120,8 +118,7 @@
     transform: translateX(-100%);
   }
 }
-.passed-text.words, .left-text.words {
-  font-family: 'fcolor';
+.left-text.words, .right-text.words {
   animation: words 1s ease;
 }
 
@@ -131,7 +128,7 @@
   }
 }
 
-.left {
+.right {
   flex-grow: 1;
   /* color: #F5F9F8; */
 }

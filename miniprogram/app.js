@@ -3,7 +3,9 @@ App({
   color: {
     primaryColor: '#549688',
     backgroundColor: '#f6faf9',
-    primaryName: '铜绿'
+    primaryName: '铜绿',
+    tabIndex: 3,
+    colorIndex: '5#549688'
   },
   globalData: {
     openid: ''
@@ -18,7 +20,9 @@ App({
     that.color = wx.getStorageSync('colorSet') || {
       primaryColor: '#549688',
       backgroundColor: '#f6faf9',
-      primaryName: '铜绿'
+      primaryName: '铜绿',
+      tabIndex: 3,
+      colorIndex: '5#549688'
     }
     
     wx.cloud.init({

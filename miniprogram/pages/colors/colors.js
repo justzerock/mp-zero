@@ -10,23 +10,28 @@ Page({
   data: {
     themeColors: colors,
     primaryColor: app.color.primaryColor,
-    backgroundColor: app.color.backgroundColor,
-    currentColors: colors[0].colors,
-    tidx: 0,
-    cidx: ''
+    currentColors: colors[app.color.tabIndex].colors,
+    tabIndex: app.color.tabIndex,
+    colorIndex: '5#549688'
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
+    this.setData({
+      primaryColor: app.color.primaryColor,
+      tabIndex: app.color.tabIndex,
+      colorIndex: app.color.colorIndex,
+      currentColors: colors[app.color.tabIndex].colors
+    })
   },
 
   /* 点击标签 */
   onClickTab: function (e) {
     let id = e.currentTarget.id
     this.setData({
-      tidx: id,
+      tabIndex: id,
       currentColors: colors[id].colors
     })
   },
@@ -34,14 +39,14 @@ Page({
   /* 点击颜色项 */
   onClickColorItem: function (e) {
     let id = e.currentTarget.id
-    let current = this.data.cidx
+    let current = this.data.colorIndex
     if (current === '' || current !== id) {
       current = id
     } else {
       current = ''
     }
     this.setData({
-      cidx: current
+      colorIndex: current
     })
   },
 
@@ -50,24 +55,24 @@ Page({
     let primaryColor = e.currentTarget.dataset.primaryColor
     let primaryName = e.currentTarget.dataset.primaryName
     let backgroundColor = e.currentTarget.dataset.backgroundColor
-    this.toSet(primaryColor, primaryName, backgroundColor)
-  },
-
-  /* 设置主题色 */
-  toSet: function (primaryColor, primaryName, backgroundColor) {
+    let tabIndex = this.data.tabIndex
+    let colorIndex = this.data.colorIndex
     this.setData({
-      primaryColor: primaryColor,
-      backgroundColor: backgroundColor
+      primaryColor: primaryColor
     })
     app.color.primaryColor = primaryColor
     app.color.backgroundColor = backgroundColor
     app.color.primaryName = primaryName
+    app.color.tabIndex = tabIndex
+    app.color.colorIndex = colorIndex
     wx.setStorage({
       key: 'colorSet',
       data: {
         primaryName,
         primaryColor,
-        backgroundColor
+        backgroundColor,
+        tabIndex,
+        colorIndex
       }
     })
   },

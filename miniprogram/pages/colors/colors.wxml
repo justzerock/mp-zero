@@ -8,8 +8,8 @@
     >
       <view 
         id="{{tid}}" 
-        class='tab-name {{tidx == tid ? "current" : ""}}' 
-        style='background: {{tab.fcolor}}; color: {{tab.color}}; border-color: {{tidx == tid ? tab.color : tab.fcolor}}'
+        class='tab-name {{tabIndex == tid ? "current" : ""}}' 
+        style='background: {{tab.fcolor}}; color: {{tab.color}}; border-color: {{tabIndex == tid ? tab.color : tab.fcolor}}'
         bind:tap="onClickTab"
       >
         {{tab.key}}
@@ -24,7 +24,7 @@
       wx:key="cid"
     >
       <view 
-        class="current-item {{cidx === cid+color.value ? 'current' : ''}}"
+        class="current-item {{colorIndex === cid+color.value ? 'current' : ''}}"
         style='background: {{color.value}}; color: {{color.fvalue}};}}'
         id="{{cid+color.value}}"
         bind:tap="onClickColorItem"

@@ -14,11 +14,21 @@
       style="background:{{primaryColor}};"
       bindtap='showWords'
       >
-      <view class='passed' style='width:{{passed}};color:{{primaryColor}};background:{{backgroundColor}};'>
-        <view class='passed-text {{words?"words":"percent"}}'>{{passedText}}</view>
+      <view 
+        class='left' 
+        style='width:{{leftPercent}};color:{{primaryColor}};background:{{backgroundColor}};'
+      >
+        <view 
+          class='left-text {{words?"words":"percent"}}'
+        >{{leftText}}</view>
       </view>
-      <view class='left' style="color:{{backgroundColor}};">
-        <view class='left-text {{words?"words":"percent"}}'>{{leftText}}</view>
+      <view 
+        class='right' 
+        style="color:{{backgroundColor}};"
+      >
+        <view 
+          class='right-text {{words?"words":"percent"}}'
+        >{{rightText}}</view>
       </view>
     </view>
     <view class='setting-list'>

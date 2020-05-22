@@ -3,6 +3,8 @@ const db = wx.cloud.database()
 const dbLike = db.collection('user-like')
 const config = require('../../libs/config.js');
 const avatarUrl = config.avatar.link;
+const yearPassed = app.getProgress()
+const dayPercent = app.setDaynight()
 
 Page({
 
@@ -42,9 +44,9 @@ Page({
         icon: 'about'
       }
     ],
-    passed: '0%',
-    passedText: '',
+    leftPercent: '0%',
     leftText: '',
+    rightText: '',
     primaryColor: '#549688',
     backgroundColor: '#f6faf9',
     colorName: '铜绿',
@@ -233,18 +235,19 @@ Page({
   /* 设置年进度 */
   setYearPassed: function () {
     let that = this
-    let passed = app.getProgress()
-    let passedText = ''
-    let leftText = ''
-    if (passed < 50) {
-      leftText = '本年度已过去 ' + passed + '%'
+    let leftText
+    let rightText
+    if (yearPassed < 50) {
+      leftText = yearPassed + '%'
+      rightText = '👈 本年度已过去 '
     } else {
-      passedText = '本年度还剩下 ' + (100-passed).toFixed(1) + '%'
+      leftText = '本年度还剩下 👉'
+      rightText = (100-yearPassed).toFixed(1) + '%'
     }
     that.setData({
-      passed: passed + '%',
-      passedText: passedText,
+      leftPercent: yearPassed + '%',
       leftText: leftText,
+      rightText: rightText,
       words:false
     })
   },
@@ -255,24 +258,10 @@ Page({
     if (words) {
       that.setYearPassed()
     } else {
-      //let passed = app.getProgress()
-      let passed = app.setDaynight()
-      let passedText = ''
-      let leftText = ''
-      if (passed < 35) {
-        passedText = ''
-        leftText = '逝者如斯夫，不舍昼夜'
-      } else if (passed >= 35 && passed <= 65) {
-        passedText = '逝者如斯夫'
-        leftText = '不舍昼夜'
-      } else {
-        passedText = '逝者如斯夫，不舍昼夜'
-        leftText = ''
-      }
       that.setData({
-        passed: passed + '%',
-        passedText: passedText,
-        leftText: leftText,
+        leftPercent: dayPercent + '%',
+        leftText: '逝者如斯夫',
+        rightText: '不舍昼夜',
         words: true
       })
     }
@@ -311,7 +300,7 @@ Page({
     let words = that.data.words
     if (words) return
     this.setData({
-      passed: app.getProgress() + '%'
+      leftPercent: yearPassed + '%'
     })
   },
 
@@ -322,7 +311,7 @@ Page({
     let words = this.data.words
     if (words) return
     this.setData({
-      passed: app.getProgress()/2 + '%'
+      leftPercent: yearPassed/2 + '%'
     })
   },
 

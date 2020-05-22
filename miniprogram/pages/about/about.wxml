@@ -25,8 +25,36 @@
 
       点击<text class="name">年度进度条</text>
       显示一句论语：
-      
-      <text class="block"><text class="left">逝者如斯夫</text><text class="right">不舍昼夜</text></text>
+    
+      <text
+        class="block"
+        bind:tap="onClickYearPercent"
+      >
+        <text 
+          class="left"
+          style="width: {{leftPercent}}"
+        >{{leftText}}</text>
+        <text
+          class="right"
+          style="width: {{rightPercent}}"
+        >{{rightText}}</text>
+      </text>
+
+      <text class="icon-down middle-icon">
+      </text>
+
+      <text
+        class="block"
+      >
+        <text 
+          class="left"
+          style="width: {{dayPercent}}"
+        >往者不可谏</text>
+        <text
+          class="right"
+          style="width: {{nightPercent}}"
+        >来者犹可追</text>
+      </text>   
 
       两者所在的宽度比例
       代表了当天昼夜长度的比例🌞🌛
