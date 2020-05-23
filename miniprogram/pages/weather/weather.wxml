@@ -56,7 +56,7 @@
     <block wx:if="{{loading}}">
       <view class="loadingsun he-100" style="color:{{primaryColor}}"></view>
     </block>
-    <swiper wx:if='{{weathers.length > 0}}' class='weather-swiper' style='height:{{platform=="ios"?deviceHeight:"100%"}};' duration="100" current='{{swiperCurrent}}' bindchange="swiperChange">
+    <swiper wx:if='{{weathers.length > 0}}' class='weather-swiper' duration="100" current='{{swiperCurrent}}' bindchange="swiperChange">
       <block
         wx:for="{{weathers}}"
         wx:for-item="weather"
@@ -193,5 +193,5 @@
       ></view>
     </view>
   </view>
-  <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}"></tabbar>
+  <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}" hasHomeBar="{{hasHomeBar}}"></tabbar>
 </view>

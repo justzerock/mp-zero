@@ -14,12 +14,15 @@
 .about {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   color: #333;
   position: relative;
-  width: 100%;
+  width: 600rpx;
+  margin: auto;
   line-height: 1.5em;
   letter-spacing: 0.1em;
+  flex-direction: column;
+  text-align: left;
 }
 
 .first {
@@ -32,12 +35,16 @@
   left: 0;
   bottom: 0;
   width: 2em;
-  height: 10px;
-  background: rgba(36, 191, 165, 0.2);
+  height: 16rpx;
+  background: rgba(36, 191, 165, 0.25);
 }
 
 .name {
   color: #24BFA5;
+}
+
+.first, .name {
+  display: inline-flex;
 }
 
 .block {
@@ -49,7 +56,12 @@
   background: #24BFA5;
   border-radius: 5px;
   color: #fff;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.08);
+  transition: all .25s ease-in-out;
+}
+.block:active {
+  transform: scale(0.99);
+  opacity: 0.9;
 }
 .block .left {
   display: flex;
@@ -62,7 +74,7 @@
   background: #fff;
   justify-content: center;
   align-items: center;
-  transition: all .25s ease-in-out;
+  transition: all 1.5s ease-in-out;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -74,7 +86,7 @@
   top: 0;
   justify-content: center;
   align-items: center;
-  transition: all .25s ease-in-out;
+  transition: all 1.5s ease-in-out;
   white-space: nowrap;
   overflow: hidden;
 }

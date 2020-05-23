@@ -10,21 +10,20 @@ App({
   globalData: {
     openid: ''
   },
+  systemInfo: {
+    platform: 'ios',
+    model: 'iPhone 8',
+    windowHeight: 642
+  },
+  hasHomeBar: false,
   /* promisify */
   request: promisify(wx.request),
   getLocation: promisify(wx.getLocation),
+  getSystemInfo: promisify(wx.getSystemInfo),
 
-  onLaunch: function () {
+  onLaunch: async function () {
     wx.hideTabBar()
-    var that = this
-    that.color = wx.getStorageSync('colorSet') || {
-      primaryColor: '#549688',
-      backgroundColor: '#f6faf9',
-      primaryName: '铜绿',
-      tabIndex: 3,
-      colorIndex: '5#549688'
-    }
-    
+    let that = this
     wx.cloud.init({
       traceUser: true,
     })
@@ -38,6 +37,20 @@ App({
         that.onGetOpenid()
       }
     })
+    that.systemInfo =  wx.getStorageSync('systemInfo') || await that.getSystemInfo()
+    const model = that.systemInfo.model
+    if (model.search('iPhone X') !== -1 || model.search('iPhone 1') !== -1) {
+      that.hasHomeBar = true
+    }
+
+    that.color = wx.getStorageSync('colorSet') || {
+      primaryColor: '#549688',
+      backgroundColor: '#f6faf9',
+      primaryName: '铜绿',
+      tabIndex: 3,
+      colorIndex: '5#549688'
+    }
+    
   },
 
   onShow: function () {
@@ -45,26 +58,31 @@ App({
   },
 
   getProgress: function () {
-    var date = new Date()
-    var year = date.getFullYear()
-    var yearStart = new Date(year+'/01/01 00:00:00')
-    var yearEnd = new Date(year+'/12/31 23:59:59')
-    var fullDiff = yearEnd.getTime() - yearStart.getTime()
-    var dateDiff = date.getTime() - yearStart.getTime()
-    var passedPercent = dateDiff/fullDiff
+    let date = new Date()
+    let year = date.getFullYear()
+    let yearStart = new Date(year+'/01/01 00:00:00')
+    let yearEnd = new Date(year+'/12/31 23:59:59')
+    let fullDiff = yearEnd.getTime() - yearStart.getTime()
+    let dateDiff = date.getTime() - yearStart.getTime()
+    let passedPercent = dateDiff/fullDiff
     return (passedPercent*100).toFixed(1)
     //return 'date:' + date + ' ;yearStart:' + yearStart+ ' ;yearEnd:' + yearEnd
   },
 
   setDaynight:function () {
-    var srss = wx.getStorageSync('weathers')[0].daily_forecast[0] || { sr: '06:00', ss: '18:00' }
-    var dayStart = new Date('2018/01/01 00:00')
-    var dayEnd = new Date('2018/01/01 23:59')
-    var daySr = new Date('2018/01/01 '+ srss.sr)
-    var daySs = new Date('2018/01/01 '+srss.ss)
-    var fullDiff = dayEnd.getTime() - dayStart.getTime()
-    var dayDiff = daySs.getTime() - daySr.getTime()
-    var dayPercent = dayDiff/fullDiff
+    let srss
+    try {
+      srss = wx.getStorageSync('weathers')[0].daily_forecast[0]
+    } catch (error) {
+      srss = { sr: '06:00', ss: '18:00' }
+    }
+    let dayStart = new Date('2018/01/01 00:00')
+    let dayEnd = new Date('2018/01/01 23:59')
+    let daySr = new Date('2018/01/01 '+ srss.sr)
+    let daySs = new Date('2018/01/01 '+srss.ss)
+    let fullDiff = dayEnd.getTime() - dayStart.getTime()
+    let dayDiff = daySs.getTime() - daySr.getTime()
+    let dayPercent = dayDiff/fullDiff
     return (dayPercent*100).toFixed(1)
   },
 

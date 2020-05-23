@@ -1,70 +1,97 @@
 <view class='container'>
   <view class='content'>
-    <view class="logo">      
+    <view 
+      class="logo"
+      id="weather"
+      bindtap = "switchTab"
+    >      
       <image src="{{avatarUrl}}" mode="aspectFit">
       </image>
     </view>
 
-    <text class="about" selectable="false" space="true" decode="false">
+    <view class="about">
 
+      <text class="" selectable="false" space="true" decode="false">
+        <text class="first">如</text>你所见，这是个天气小程序
 
-      <text class="first">如</text>你所见，这是个天气小程序
+      </text>
 
-      使用了<text class="name">和风天气</text>的 api
-      在此感谢
-      可以设置最多5个地区的天气
-      是我限制的😏
+      <text 
+        class="" selectable="false" space="true" decode="false"
+        id='weather'
+        bindtap = "switchTab"
+      >      
+        使用了<text class="name">和风天气</text>的 api
+        在此感谢
+        可以设置最多5个地区的天气
+        是我限制的😏
 
-      有多种<text class="name">主题色</text>供你选择，很多很多
-      🧡💛💚💙💜🖤❤
-      不过每一种都是差不多的单调，枯燥
+      </text>
 
-      设置页的<text class="name">点赞</text>功能
-      比官方来得早
-      内外皆可赞👍
+      <text 
+        class="" selectable="false" space="true" decode="false"
+        id='colors'
+        bindtap = "navigateTo"
+      >
+        有多种<text class="name">主题色</text>供你选择，很多很多
+        🧡💛💚💙💜🖤❤
+        不过每一种都是差不多的单调，枯燥
 
-      点击<text class="name">年度进度条</text>
-      显示一句论语：
-    
-      <text
+      </text>
+
+      <text 
+        class="" selectable="false" space="true" decode="false"
+        id='center'
+        bindtap = "switchTab"
+      >
+        设置页的<text class="name">点赞</text>功能
+        比官方来得早
+        内外皆可赞👍
+
+        点击<text class="name">年度进度条</text>
+        显示一句论语：
+
+      </text>
+
+      <view
         class="block"
         bind:tap="onClickYearPercent"
       >
-        <text 
+        <view 
           class="left"
           style="width: {{leftPercent}}"
-        >{{leftText}}</text>
-        <text
+        >{{leftText}}</view>
+        <view
           class="right"
           style="width: {{rightPercent}}"
-        >{{rightText}}</text>
-      </text>
+        >{{rightText}}</view>
+      </view>  
 
-      <text class="icon-down middle-icon">
-      </text>
-
-      <text
-        class="block"
+      <text 
+        class="" selectable="false" space="true" decode="false"
+        id='center'
+        bindtap = "switchTab"
       >
-        <text 
-          class="left"
-          style="width: {{dayPercent}}"
-        >往者不可谏</text>
-        <text
-          class="right"
-          style="width: {{nightPercent}}"
-        >来者犹可追</text>
-      </text>   
 
-      两者所在的宽度比例
-      代表了当天昼夜长度的比例🌞🌛
-      数据取自第一个地区的日升日落时间
-      再次感谢<text class="name">和风天气</text>🤝
+        两者所在的宽度比例
+        代表了当天昼夜长度的比例🌞🌛
+        数据取自第一个地区的日升日落时间
+      </text>
+      <text 
+        class="" selectable="false" space="true" decode="false"
+        id='weather'
+        bindtap = "switchTab"
+      >
 
-      谢谢使用
+        再次感谢<text class="name">和风天气</text>🤝
+
+        <text class="name">随意点点</text>
+
+        谢谢使用 
 
 
 
-    </text>
+      </text>
+    </view>
   </view>
 </view>

@@ -1,11 +1,12 @@
 const config = require('../../libs/config.js');
 const hekey = config.heweather.key;
 const app = getApp()
+let that
 Page({
   data: {
-    weather: '',
     weathers: [],
     swiperCurrent: 0,
+    hasHomeBar: false,
     loading: false,
     showUpdate: false,
     showDelBtn: false,
@@ -30,7 +31,7 @@ Page({
 
   onLoad: function () { 
     wx.hideTabBar()
-    let that = this
+    that = this
     that.setColors()
     that.getSavedLocation()
     that.getWeathers()
@@ -51,7 +52,6 @@ Page({
   },
 
   getWeathers: function () {
-    let that = this
     that.setData({
       weathers: wx.getStorageSync('weathers') || []
     })
@@ -88,7 +88,6 @@ Page({
   },
 
   getWeather: async function (locations) {
-    let that = this
     that.setData({
       loading: true
     })
@@ -153,7 +152,6 @@ Page({
 
   /* 获取坐标 */
   getLocation: function () {
-    let that = this
     let lonlat = that.data.lonlat
     wx.getLocation({
       type: 'wgs84',
@@ -168,7 +166,6 @@ Page({
 
   /* 获取地区cid */
   getLocationCid: function (lonlat) {
-    let that = this
     let savedLocation = []
     wx.request({
       url: 'https://search.heweather.com/find?',
@@ -202,18 +199,9 @@ Page({
 
   /* 获取储存的城市 */
   getSavedLocation: function () {
-    let that = this
     that.setData({
       savedLocation: wx.getStorageSync('savedLocation') || []
     })
-  },
-
-  /* 显示小程序时调用onLoad() */
-  onShow: function () {
-    this.onLoad()
-  },
-
-  onHide: function () {
   },
 
   /* 隐藏删除按钮 */
@@ -256,29 +244,6 @@ Page({
     this.hideDelBtn()
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    let weathers = this.data.weathers
-    let swiperCurrent = this.data.swiperCurrent
-    let title 
-    if (swiperCurrent == weathers.length) {
-      title = '知晴否'
-    } else {
-      let weather = weathers[swiperCurrent]
-      let city = 
-        weather.basic.location === weather.basic.parent_city ? 
-        weather.basic.location : 
-        weather.basic.parent_city + ' ' + weather.basic.location
-      title = city + ' ' + weather.now.cond_txt + ' ' + weather.now.tmp + '°'
-    }
-    return {
-      title: title,
-      imageUrl: ''
-    }
-  },
-
   onPullDownRefresh: function () {
     wx.setStorageSync('forceUpdate', true)
     this.getWeather(this.data.savedLocation)
@@ -286,7 +251,6 @@ Page({
   },
 
   showDayTmp: function (e) {
-    let that = this
     that.setData({
       autoplay: false
     })
@@ -311,6 +275,42 @@ Page({
         }
       }
     })
-  }
+  },
+
+  /* 显示小程序时调用onLoad() */
+  onShow: function () {
+    this.onLoad()
+  },
+
+  onHide: function () {
+  },
+
+  onReady: () => {
+    that.setData({
+      hasHomeBar: app.hasHomeBar
+    })
+  },
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    let weathers = this.data.weathers
+    let swiperCurrent = this.data.swiperCurrent
+    let title 
+    if (swiperCurrent == weathers.length) {
+      title = '知晴否'
+    } else {
+      let weather = weathers[swiperCurrent]
+      let city = 
+        weather.basic.location === weather.basic.parent_city ? 
+        weather.basic.location : 
+        weather.basic.parent_city + ' ' + weather.basic.location
+      title = city + ' ' + weather.now.cond_txt + ' ' + weather.now.tmp + '°'
+    }
+    return {
+      title: title,
+      imageUrl: ''
+    }
+  },
 
 })

@@ -1,4 +1,3 @@
-const app = getApp();
 Component({
   properties: {
     color: {
@@ -12,6 +11,10 @@ Component({
     current: {
       type: String,
       value: ''
+    },
+    hasHomeBar: {
+      type: Boolean,
+      value: false
     }
   },
   data: {
@@ -22,7 +25,7 @@ Component({
     // 这里是一个自定义方法
     switch: (e) => {
       // 判断是否为主页面防止原地跳转
-      var key = e.currentTarget.dataset.hi
+      let key = e.currentTarget.dataset.hi
       wx.switchTab({
         url: '/pages/'+key+'/'+key,
       })

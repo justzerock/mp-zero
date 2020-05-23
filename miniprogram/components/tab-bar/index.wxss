@@ -1,31 +1,21 @@
-.weibo-tabbar {
-    bottom: 0;
-    height: 97rpx;
-    padding: 12rpx 0rpx;
-    display: flex;
-    width: 100%;
-    position: relative;
-    box-sizing: border-box;
+.custom-tabbar {
+  bottom: 0;
+  display: flex;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  transition: all .25s ease-in-out;
 }
-.weibo-tabbar::after {
-    content: "";
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: 0;
-    left: 0;
-    transform: scale(0.5);
-    transform-origin: 0 0;
-  }
-  .weibo-tabbar .item{
 
-    z-index: 999;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-size: 20rpx;
-    color: #b1b1b1;
+.custom-tabbar .item{
+  z-index: 999;
+  width: 50%;
+  height: 54rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 20rpx;
+  color: #b1b1b1;
 }
 

@@ -5,7 +5,7 @@ const config = require('../../libs/config.js');
 const avatarUrl = config.avatar.link;
 const yearPassed = app.getProgress()
 const dayPercent = app.setDaynight()
-
+let that
 Page({
 
   /**
@@ -56,7 +56,8 @@ Page({
     likeData: [],
     openid: '',
     current: '',
-    words: false
+    words: false,
+    hasHomeBar: false
   },
 
   /**
@@ -64,7 +65,7 @@ Page({
    */
   onLoad: function () { 
     wx.hideTabBar()
-    let that = this
+    that = this
     that.setColors()
     that.setSettingDetail()
     that.getLikeCount()
@@ -94,7 +95,6 @@ Page({
 
   // 从storage读取
   getUserInfo: function () {
-    let that = this
     wx.getStorage({
       key: 'logged',
       success (res) {
@@ -136,7 +136,6 @@ Page({
 
   /* 获取点赞数量 */
   getLikeCount: function () {
-    let that = this
     dbLike.where({
       like: true
     }).count().then(res => {
@@ -165,7 +164,6 @@ Page({
 
   /* 点击设置项目 */
   setItemLike: function () {
-    let that = this
     let like = that.data.like
     let likeCount = that.data.likeCount
     let likeData = that.data.likeData
@@ -211,7 +209,6 @@ Page({
 
   /* 点击设置项目 */
   setItemClean: function () {
-    let that = this
     wx.showModal({
       title: '确定清空？',
       content: '此操作将会删除天气及搜索历史，以及恢复默认配色',
@@ -234,7 +231,6 @@ Page({
 
   /* 设置年进度 */
   setYearPassed: function () {
-    let that = this
     let leftText
     let rightText
     if (yearPassed < 50) {
@@ -253,7 +249,6 @@ Page({
   },
 
   showWords: function () {
-    let that = this
     let words = that.data.words
     if (words) {
       that.setYearPassed()
@@ -269,7 +264,6 @@ Page({
 
   /* 设置菜单详情 */
   setSettingDetail: function () {
-    let that = this
     wx.getStorageInfo({
       success (res) {
         that.setData({
@@ -285,8 +279,10 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-
+  onReady: () => {
+    that.setData({
+      hasHomeBar: app.hasHomeBar
+    })
   },
 
   /**

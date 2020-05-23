@@ -58,12 +58,12 @@
             已缓存{{usedSize}}KB
           </block>
           <block wx:else>
-            尽管没什么用
+            知晴否
           </block>
         </view>
       </view>
     </view>
     </view>
   </view>
-  <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}"></tabbar>
+  <tabbar color="{{primaryColor}}" background="{{backgroundColor}}" current="{{ current }}" hasHomeBar="{{hasHomeBar}}"></tabbar>
 </view>

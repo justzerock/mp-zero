@@ -42,5 +42,7 @@
         </view>
       </view>
     </block>
+    <view class="current-item">
+    </view>
   </view>
 </view>
