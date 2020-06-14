@@ -12,10 +12,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userInfo:{
-      avatarUrl: avatarUrl,
-      nickName: '👈 知晴否',
-    },
+    avatarUrl: avatarUrl,
+    nickName: '👈 知晴否',
     logged: false,
     settingItems: [
       {
@@ -69,7 +67,7 @@ Page({
     that.setColors()
     that.setSettingDetail()
     that.getLikeCount()
-    that.getUserInfo()
+    //that.getUserInfo()
     setTimeout(function () {
       that.setYearPassed()
     }, 500)
